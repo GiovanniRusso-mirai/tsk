@@ -3,46 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TSK Ryu - Iscrizioni 2026</title>
+    <title>TSK Ryu - Iscrizioni Torneo</title>
     <style>
         :root { --primary: #d32f2f; --accent: #1a237e; --bg: #f4f7f6; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); padding: 10px; margin: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: #333; margin: 0; padding: 10px; }
         .container { max-width: 800px; margin: 0 auto; background: white; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); overflow: hidden; }
-        .header { text-align: center; padding: 20px; border-bottom: 5px solid var(--primary); }
-        .logo { max-width: 80px; }
+        .header { text-align: center; padding: 20px; border-bottom: 5px solid var(--primary); background: white; }
+        .logo { max-width: 100px; height: auto; }
         .form-section { padding: 20px; }
-        .atleta-card { border: 1px solid #ddd; padding: 15px; border-radius: 12px; margin-bottom: 20px; background: #fff; position: relative; }
-        .grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 10px; margin-bottom: 15px; }
-        .checkbox-group { background: #f9f9f9; padding: 15px; border-radius: 8px; display: grid; gap: 10px; }
-        .disabilita { opacity: 0.5; pointer-events: none; }
-        .footer-check { margin-top: 20px; padding: 15px; background: #fff5f5; border: 1px solid var(--primary); border-radius: 8px; font-size: 0.85rem; }
-        button { width: 100%; padding: 15px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        .btn-submit { background: var(--primary); color: white; font-size: 1.1rem; }
-        @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px; }
+        .atleta-card { background: #fff; border: 1px solid #ddd; border-radius: 12px; padding: 20px; margin-bottom: 20px; position: relative; }
+        .atleta-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+        label { display: block; font-size: 0.75rem; font-weight: 700; margin-bottom: 5px; color: #666; text-transform: uppercase; }
+        input { width: 100%; padding: 12px; border: 2px solid #dfe6e9; border-radius: 8px; box-sizing: border-box; font-size: 1rem; }
+        .checkbox-group { display: flex; flex-direction: column; gap: 10px; background: #f9f9f9; padding: 15px; border-radius: 8px; }
+        .checkbox-item { display: flex; align-items: center; gap: 10px; font-weight: 600; cursor: pointer; }
+        .checkbox-item input { width: 20px; height: 20px; cursor: pointer; }
+        .disabilitato { opacity: 0.4; pointer-events: none; }
+        .medica-box { background: #fff5f5; border: 1px solid var(--primary); padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 0.9rem; }
+        .btn-submit { width: 100%; padding: 18px; background: var(--primary); color: white; border: none; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 1.1rem; }
+        .btn-add { width: 100%; padding: 12px; background: #fff; border: 2px dashed #ccc; color: #666; cursor: pointer; font-weight: bold; border-radius: 8px; margin-bottom: 15px; }
+        @media (max-width: 600px) { .grid, .atleta-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="header">
-        <img src="https://scontent-fco2-1.xx.fbcdn.net/v/t39.30808-6/299940804_510546830876553_8892043649465700842_n.png?..." class="logo">
-        <h2 style="color:var(--accent); margin:10px 0;">Tai Shin Do Kai Ryu</h2>
+        <img src="https://scontent-fco2-1.xx.fbcdn.net/v/t39.30808-6/299940804_510546830876553_8892043649465700842_n.png?_nc_cat=109&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=KfRaKBcy4bYQ7kNvwFtD0vT&_nc_oc=AdkaCiXWCryfJoULFVYg7WqF66mFvgnD73pCypsoJexFYoXcJK4hiXQ1fWi0T7RxClU&_nc_zt=23&_nc_ht=scontent-fco2-1.xx&_nc_gid=BSB6zC-CWoJRDzEBzyPNbA&oh=00_AftdHc8vIl8F0rP-oic5rZgt9rrt7UQ2uuNWmDMUb5rHiQ&oe=6983C883" alt="Logo TSK" class="logo">
+        <h1 style="color:var(--accent); font-size:1.5rem;">Tai Shin Do Kai Ryu</h1>
     </div>
 
     <form id="torneoForm" class="form-section">
         <div class="grid">
-            <input type="text" id="palestra" placeholder="Nome Palestra" required>
-            <input type="text" id="responsabile" placeholder="Nome Responsabile" required>
+            <div><label>Palestra</label><input type="text" id="palestra" placeholder="Nome ASD" required></div>
+            <div><label>Responsabile</label><input type="text" id="responsabile" placeholder="Nome Cognome" required></div>
         </div>
 
         <div id="listaAtleti"></div>
+        <button type="button" class="btn-add" onclick="renderAtleta()">+ AGGIUNGI ATLETA</button>
 
-        <button type="button" onclick="renderAtleta()" style="background:#eee; border:1px dashed #999;">+ AGGIUNGI ATLETA</button>
-
-        <div class="footer-check">
+        <div class="medica-box">
             <label style="display:flex; gap:10px; cursor:pointer;">
                 <input type="checkbox" id="checkMedica" required>
-                <span>Dichiaro che tutti gli atleti sono in possesso di certificato medico agonistico e assicurazione personale [Art.16/17].</span>
+                <span>Dichiaro che tutti gli atleti hanno certificato medico agonistico e assicurazione personale [Art. 16/17].</span>
             </label>
         </div>
 
@@ -55,37 +59,40 @@
 
     function renderAtleta() {
         const container = document.getElementById('listaAtleti');
-        const id = Date.now();
+        const count = container.children.length + 1;
         const div = document.createElement('div');
         div.className = 'atleta-card';
         div.innerHTML = `
-            <div class="grid">
-                <input type="text" class="nome" placeholder="Nome Atleta" required>
-                <input type="number" class="peso" placeholder="Peso kg" required>
-                <input type="number" class="eta" placeholder="Età" onchange="validaEta(this)" required>
+            <button type="button" onclick="this.parentElement.remove()" style="position:absolute; top:10px; right:10px; color:red; border:none; background:none; font-weight:bold; cursor:pointer;">ELIMINA</button>
+            <label style="color:var(--accent); margin-bottom:10px;">Atleta #${count}</label>
+            <div class="atleta-grid">
+                <div><label>Nome Atleta</label><input type="text" class="nome" required></div>
+                <div><label>Peso kg</label><input type="number" class="peso" step="0.1" required></div>
+                <div><label>Età</label><input type="number" class="eta" onchange="checkVincoli(this)" required></div>
             </div>
+            <label>Discipline:</label>
             <div class="checkbox-group">
-                <label class="check-item"><input type="checkbox" class="gara" value="Kumitè Kids"> Kumitè Kids (4-11 anni)</label>
-                <label class="check-item gara-extra"><input type="checkbox" class="gara" value="Kick Jitsu"> Kick Jitsu (Dai 12 anni)</label>
-                <label class="check-item gara-extra"><input type="checkbox" class="gara" value="Lotta a terra"> Lotta a terra (Dai 12 anni)</label>
+                <label class="checkbox-item"><input type="checkbox" class="gara" value="Kumitè Kids"> Kumitè Kids (4-11 anni)</label>
+                <label class="checkbox-item extra-gara"><input type="checkbox" class="gara" value="Kick Jitsu"> Kick Jitsu (Dai 12 anni)</label>
+                <label class="checkbox-item extra-gara"><input type="checkbox" class="gara" value="Lotta a terra"> Lotta a terra (Dai 12 anni)</label>
             </div>
         `;
         container.appendChild(div);
     }
 
-    function validaEta(input) {
+    function checkVincoli(input) {
         const card = input.closest('.atleta-card');
         const eta = parseInt(input.value);
-        const extraGare = card.querySelectorAll('.gara-extra');
+        const extra = card.querySelectorAll('.extra-gara');
         
         if (eta >= 4 && eta <= 7) {
-            extraGare.forEach(el => {
-                el.classList.add('disabilita');
+            extra.forEach(el => {
+                el.classList.add('disabilitato');
                 el.querySelector('input').checked = false;
             });
-            alert("Per atleti dai 4 ai 7 anni è consentito solo Kumitè Kids.");
+            alert("Bambini 4-7 anni: solo Kumitè Kids consentito.");
         } else {
-            extraGare.forEach(el => el.classList.remove('disabilita'));
+            extra.forEach(el => el.classList.remove('disabilitato'));
         }
     }
 
@@ -102,9 +109,10 @@
                 gare: Array.from(card.querySelectorAll('.gara:checked')).map(c => c.value)
             }))
         };
-        alert("Invio in corso...");
+
+        alert("Invio dati...");
         await fetch(GOOGLE_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
-        alert("Iscrizioni inviate correttamente!");
+        alert("ISCRIZIONI INVIATE!");
         location.reload();
     };
 
