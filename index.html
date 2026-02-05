@@ -1,58 +1,88 @@
-ì<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="it">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TSK Ryu - Iscrizioni Torneo</title>
+    <title>Ju Jitsu Champions Cup - TSK</title>
     <style>
         :root { --primary: #d32f2f; --accent: #1a237e; --bg: #f4f7f6; }
         body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); margin: 0; padding: 10px; }
         .container { max-width: 800px; margin: 0 auto; background: white; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); overflow: hidden; }
-        .header { text-align: center; padding: 20px; border-bottom: 5px solid var(--primary); }
-        .logo { max-width: 100px; }
+        
+        /* Header con Logo e Titolo Gara */
+        .header { text-align: center; padding: 25px 20px; border-bottom: 5px solid var(--primary); background: white; }
+        .logo { max-width: 120px; height: auto; margin-bottom: 15px; display: block; margin-left: auto; margin-right: auto; }
+        h1 { margin: 0; font-size: 1.8rem; color: var(--accent); text-transform: uppercase; }
+        h2 { margin: 5px 0 0; font-size: 1rem; color: #666; font-weight: 400; }
+        
         .form-section { padding: 20px; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
-        .atleta-card { background: #fff; border: 1px solid #ddd; border-radius: 12px; padding: 20px; margin-bottom: 20px; position: relative; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px; }
+        
+        .atleta-card { background: #fff; border: 1px solid #ddd; border-radius: 12px; padding: 20px; margin-bottom: 20px; position: relative; border-left: 5px solid var(--accent); }
         .atleta-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 10px; margin-bottom: 15px; }
-        input { width: 100%; padding: 12px; border: 2px solid #dfe6e9; border-radius: 8px; box-sizing: border-box; }
-        .checkbox-group { display: flex; flex-direction: column; gap: 10px; background: #f9f9f9; padding: 15px; border-radius: 8px; }
-        .checkbox-item { display: flex; align-items: center; gap: 10px; font-weight: 600; cursor: pointer; }
-        /* Fix dimensione checkbox */
-        .checkbox-item input[type="checkbox"] { width: 18px; height: 18px; margin: 0; cursor: pointer; flex-shrink: 0; }
-        .disabilitato { opacity: 0.4; pointer-events: none; }
-        .medica-box { background: #fff5f5; border: 1px solid var(--primary); padding: 15px; border-radius: 8px; margin: 20px 0; display: flex; align-items: flex-start; gap: 12px; }
-        .medica-box input { width: 18px; height: 18px; margin-top: 2px; flex-shrink: 0; cursor: pointer; }
-        .btn-submit { width: 100%; padding: 18px; background: var(--primary); color: white; border: none; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 1.1rem; }
-        .btn-add { width: 100%; padding: 12px; background: #fff; border: 2px dashed #ccc; cursor: pointer; border-radius: 8px; margin-bottom: 15px; font-weight: bold; }
-        @media (max-width: 600px) { .grid, .atleta-grid { grid-template-columns: 1fr; } }
+        
+        label { display: block; font-size: 0.75rem; font-weight: 700; margin-bottom: 5px; color: #444; text-transform: uppercase; }
+        input { width: 100%; padding: 12px; border: 2px solid #dfe6e9; border-radius: 8px; box-sizing: border-box; font-size: 1rem; }
+        input:focus { border-color: var(--accent); outline: none; }
+
+        .checkbox-group { display: flex; flex-direction: column; gap: 12px; background: #f9f9f9; padding: 15px; border-radius: 8px; border: 1px solid #eee; }
+        .checkbox-item { display: flex; align-items: center; gap: 10px; font-weight: 600; cursor: pointer; font-size: 0.95rem; }
+        .checkbox-item input { width: 18px; height: 18px; margin: 0; cursor: pointer; flex-shrink: 0; }
+        
+        .disabilitato { opacity: 0.4; pointer-events: none; text-decoration: line-through; }
+        
+        .medica-box { background: #fff5f5; border: 1px solid var(--primary); padding: 15px; border-radius: 8px; margin: 25px 0; display: flex; align-items: flex-start; gap: 12px; }
+        .medica-box input { width: 20px; height: 20px; margin-top: 2px; flex-shrink: 0; cursor: pointer; }
+        .medica-box label { text-transform: none; font-weight: 500; font-size: 0.85rem; color: #b71c1c; cursor: pointer; line-height: 1.4; }
+
+        .btn-submit { width: 100%; padding: 18px; background: var(--primary); color: white; border: none; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 1.2rem; transition: background 0.2s; }
+        .btn-submit:hover { background: #b71c1c; }
+        .btn-add { width: 100%; padding: 15px; background: #fff; border: 2px dashed #bbb; color: #555; cursor: pointer; border-radius: 10px; margin-bottom: 20px; font-weight: bold; font-size: 1rem; }
+        .btn-add:hover { background: #f0f0f0; border-color: var(--accent); color: var(--accent); }
+
+        .remove-atleta { position: absolute; top: 10px; right: 10px; color: #ff5252; background: none; border: none; font-weight: bold; cursor: pointer; font-size: 0.8rem; }
+
+        @media (max-width: 600px) {
+            .grid, .atleta-grid { grid-template-columns: 1fr; }
+            h1 { font-size: 1.4rem; }
+        }
     </style>
 </head>
 <body>
+
 <div class="container">
     <div class="header">
-        <img src="https://scontent-fco2-1.xx.fbcdn.net/v/t39.30808-6/299940804_510546830876553_8892043649465700842_n.png?_nc_cat=109&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=KfRaKBcy4bYQ7kNvwFtD0vT&_nc_oc=AdkaCiXWCryfJoULFVYg7WqF66mFvgnD73pCypsoJexFYoXcJK4hiXQ1fWi0T7RxClU&_nc_zt=23&_nc_ht=scontent-fco2-1.xx&_nc_gid=BSB6zC-CWoJRDzEBzyPNbA&oh=00_AftdHc8vIl8F0rP-oic5rZgt9rrt7UQ2uuNWmDMUb5rHiQ&oe=6983C883" class="logo" alt="Logo TSK">
-        <h1 style="color:var(--accent); font-size:1.5rem; text-align: center;">Tai Shin Do Kai Ryu</h1>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Crystal_Clear_app_Login_Manager.png/120px-Crystal_Clear_app_Login_Manager.png" id="mainLogo" class="logo" alt="Logo">
+        <h1>Ju Jitsu Champions Cup</h1>
+        <h2>Tai Shin Do Kai Ryu</h2>
     </div>
+
     <form id="torneoForm" class="form-section">
         <div class="grid">
-            <input type="text" id="palestra" placeholder="Nome ASD" required>
-            <input type="text" id="responsabile" placeholder="Nome Responsabile" required>
+            <div><label>Nome ASD / Palestra</label><input type="text" id="palestra" placeholder="Es. Budokan Dojo" required></div>
+            <div><label>Responsabile Tecnico</label><input type="text" id="responsabile" placeholder="Nome e Cognome" required></div>
         </div>
+
         <div id="listaAtleti"></div>
         <button type="button" class="btn-add" onclick="renderAtleta()">+ AGGIUNGI ATLETA</button>
         
         <div class="medica-box">
             <input type="checkbox" id="checkMedica" required>
-            <label for="checkMedica" style="font-size: 0.85rem; cursor:pointer;">
-                Dichiaro, in qualità di Presidente/Responsabile, che tutti gli atleti iscritti hanno certificato medico agonistico e assicurazione personale in corso di validità [Art. 16/17].
+            <label for="checkMedica">
+                Dichiaro, sotto la mia responsabilità, che tutti gli atleti iscritti sono in possesso di certificato medico agonistico e assicurazione personale in corso di validità [Art. 16/17]. [cite: 1, 16, 17]
             </label>
         </div>
+
         <button type="submit" class="btn-submit">REVISIONE E INVIO</button>
     </form>
 </div>
 
 <script>
     const GOOGLE_URL = "https://script.google.com/macros/s/AKfycbyy9TpDCSXKG6hJCq3M16hL9hx4icWzBfI_SiYhjc5xKa7ViopcrHsu2K8-gg0Mhbk-kw/exec";
+    
+    // Inserisci qui l'URL del tuo logo ufficiale se quello sopra è un placeholder
+    const LOGO_TSK = "https://scontent-fco2-1.xx.fbcdn.net/v/t39.30808-6/299940804_510546830876553_8892043649465700842_n.png?_nc_cat=109&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=KfRaKBcy4bYQ7kNvwFtD0vT&_nc_oc=AdkaCiXWCryfJoULFVYg7WqF66mFvgnD73pCypsoJexFYoXcJK4hiXQ1fWi0T7RxClU&_nc_zt=23&_nc_ht=scontent-fco2-1.xx&_nc_gid=BSB6zC-CWoJRDzEBzyPNbA&oh=00_AftdHc8vIl8F0rP-oic5rZgt9rrt7UQ2uuNWmDMUb5rHiQ&oe=6983C883";
+    document.getElementById('mainLogo').src = LOGO_TSK;
 
     function renderAtleta() {
         const container = document.getElementById('listaAtleti');
@@ -60,12 +90,14 @@
         const div = document.createElement('div');
         div.className = 'atleta-card';
         div.innerHTML = `
-            <button type="button" onclick="this.parentElement.remove()" style="position:absolute; top:10px; right:10px; color:red; border:none; background:none; font-weight:bold; cursor:pointer;">X</button>
+            <button type="button" class="remove-atleta" onclick="this.parentElement.remove()">ELIMINA ATLETA</button>
+            <div style="margin-bottom:15px; color:var(--accent); font-weight:bold;">ISCRIZIONE ATLETA #${count}</div>
             <div class="atleta-grid">
-                <div><label style="font-size:0.7rem; font-weight:bold;">NOME ATLETA</label><input type="text" class="nome" required></div>
-                <div><label style="font-size:0.7rem; font-weight:bold;">PESO KG</label><input type="number" class="peso" step="0.1" required></div>
-                <div><label style="font-size:0.7rem; font-weight:bold;">ETÀ</label><input type="number" class="eta" onchange="checkVincoli(this)" required></div>
+                <div><label>Nome e Cognome</label><input type="text" class="nome" required></div>
+                <div><label>Peso (kg)</label><input type="number" class="peso" step="0.1" required></div>
+                <div><label>Età (Anni)</label><input type="number" class="eta" onchange="checkVincoli(this)" required></div>
             </div>
+            <label>Discipline di Gara:</label>
             <div class="checkbox-group">
                 <label class="checkbox-item"><input type="checkbox" class="gara" value="Kumitè Kids"> Kumitè Kids (4-11 anni)</label>
                 <label class="checkbox-item extra-gara"><input type="checkbox" class="gara" value="Kick Jitsu"> Kick Jitsu (7-15 anni)</label>
@@ -79,7 +111,6 @@
         const eta = parseInt(input.value);
         const extraGare = card.querySelectorAll('.extra-gara');
         
-        // Se l'età è inferiore a 7, Kick e Lotta vengono disabilitati
         if (eta < 7) {
             extraGare.forEach(el => {
                 el.classList.add('disabilitato');
@@ -92,11 +123,18 @@
 
     document.getElementById('torneoForm').onsubmit = async (e) => {
         e.preventDefault();
+        
+        const atletiCards = document.getElementsByClassName('atleta-card');
+        if (atletiCards.length === 0) {
+            alert("Aggiungi almeno un atleta!");
+            return;
+        }
+
         const payload = {
             palestra: document.getElementById('palestra').value,
             responsabile: document.getElementById('responsabile').value,
             accettoMedica: document.getElementById('checkMedica').checked,
-            atleti: Array.from(document.getElementsByClassName('atleta-card')).map(card => ({
+            atleti: Array.from(atletiCards).map(card => ({
                 nome: card.querySelector('.nome').value,
                 peso: card.querySelector('.peso').value,
                 eta: card.querySelector('.eta').value,
@@ -104,10 +142,14 @@
             }))
         };
 
-        alert("Invio in corso... attendi la conferma finale.");
-        await fetch(GOOGLE_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
-        alert("ISCRIZIONI INVIATE CON SUCCESSO!");
-        location.reload();
+        alert("Invio in corso... non chiudere la pagina.");
+        try {
+            await fetch(GOOGLE_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
+            alert("ISCRIZIONI INVIATE CON SUCCESSO!");
+            location.reload();
+        } catch (error) {
+            alert("Errore nell'invio. Verifica la connessione.");
+        }
     };
 
     renderAtleta();
