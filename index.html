@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ì<!DOCTYPE html>
 <html lang="it">
 <head>
     <meta charset="UTF-8">
@@ -11,16 +11,17 @@
         .header { text-align: center; padding: 20px; border-bottom: 5px solid var(--primary); }
         .logo { max-width: 100px; }
         .form-section { padding: 20px; }
-        .atleta-card { background: #fff; border: 1px solid #ddd; border-radius: 12px; padding: 20px; margin-bottom: 20px; position: relative; }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+        .atleta-card { background: #fff; border: 1px solid #ddd; border-radius: 12px; padding: 20px; margin-bottom: 20px; position: relative; }
         .atleta-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 10px; margin-bottom: 15px; }
         input { width: 100%; padding: 12px; border: 2px solid #dfe6e9; border-radius: 8px; box-sizing: border-box; }
         .checkbox-group { display: flex; flex-direction: column; gap: 10px; background: #f9f9f9; padding: 15px; border-radius: 8px; }
         .checkbox-item { display: flex; align-items: center; gap: 10px; font-weight: 600; cursor: pointer; }
-        .checkbox-item input { width: 18px; height: 18px; margin: 0; cursor: pointer; }
+        /* Fix dimensione checkbox */
+        .checkbox-item input[type="checkbox"] { width: 18px; height: 18px; margin: 0; cursor: pointer; flex-shrink: 0; }
         .disabilitato { opacity: 0.4; pointer-events: none; }
-        .medica-box { background: #fff5f5; border: 1px solid var(--primary); padding: 15px; border-radius: 8px; margin: 20px 0; display: flex; align-items: center; gap: 12px; }
-        .medica-box input { width: 20px; height: 20px; flex-shrink: 0; }
+        .medica-box { background: #fff5f5; border: 1px solid var(--primary); padding: 15px; border-radius: 8px; margin: 20px 0; display: flex; align-items: flex-start; gap: 12px; }
+        .medica-box input { width: 18px; height: 18px; margin-top: 2px; flex-shrink: 0; cursor: pointer; }
         .btn-submit { width: 100%; padding: 18px; background: var(--primary); color: white; border: none; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 1.1rem; }
         .btn-add { width: 100%; padding: 12px; background: #fff; border: 2px dashed #ccc; cursor: pointer; border-radius: 8px; margin-bottom: 15px; font-weight: bold; }
         @media (max-width: 600px) { .grid, .atleta-grid { grid-template-columns: 1fr; } }
@@ -29,7 +30,7 @@
 <body>
 <div class="container">
     <div class="header">
-        <img src="https://scontent-fco2-1.xx.fbcdn.net/v/t39.30808-6/299940804_510546830876553_8892043649465700842_n.png?_nc_cat=109&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=KfRaKBcy4bYQ7kNvwFtD0vT&_nc_oc=AdkaCiXWCryfJoULFVYg7WqF66mFvgnD73pCypsoJexFYoXcJK4hiXQ1fWi0T7RxClU&_nc_zt=23&_nc_ht=scontent-fco2-1.xx&_nc_gid=BSB6zC-CWoJRDzEBzyPNbA&oh=00_AftdHc8vIl8F0rP-oic5rZgt9rrt7UQ2uuNWmDMUb5rHiQ&oe=6983C883" class="logo">
+        <img src="https://scontent-fco2-1.xx.fbcdn.net/v/t39.30808-6/299940804_510546830876553_8892043649465700842_n.png?_nc_cat=109&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=KfRaKBcy4bYQ7kNvwFtD0vT&_nc_oc=AdkaCiXWCryfJoULFVYg7WqF66mFvgnD73pCypsoJexFYoXcJK4hiXQ1fWi0T7RxClU&_nc_zt=23&_nc_ht=scontent-fco2-1.xx&_nc_gid=BSB6zC-CWoJRDzEBzyPNbA&oh=00_AftdHc8vIl8F0rP-oic5rZgt9rrt7UQ2uuNWmDMUb5rHiQ&oe=6983C883" class="logo" alt="Logo TSK">
         <h1 style="color:var(--accent); font-size:1.5rem; text-align: center;">Tai Shin Do Kai Ryu</h1>
     </div>
     <form id="torneoForm" class="form-section">
@@ -39,46 +40,56 @@
         </div>
         <div id="listaAtleti"></div>
         <button type="button" class="btn-add" onclick="renderAtleta()">+ AGGIUNGI ATLETA</button>
+        
         <div class="medica-box">
             <input type="checkbox" id="checkMedica" required>
             <label for="checkMedica" style="font-size: 0.85rem; cursor:pointer;">
-                Dichiaro che tutti gli atleti hanno certificato medico e assicurazione [Art. 16/17].
+                Dichiaro, in qualità di Presidente/Responsabile, che tutti gli atleti iscritti hanno certificato medico agonistico e assicurazione personale in corso di validità [Art. 16/17].
             </label>
         </div>
         <button type="submit" class="btn-submit">REVISIONE E INVIO</button>
     </form>
 </div>
+
 <script>
     const GOOGLE_URL = "https://script.google.com/macros/s/AKfycbyy9TpDCSXKG6hJCq3M16hL9hx4icWzBfI_SiYhjc5xKa7ViopcrHsu2K8-gg0Mhbk-kw/exec";
+
     function renderAtleta() {
         const container = document.getElementById('listaAtleti');
         const count = container.children.length + 1;
         const div = document.createElement('div');
         div.className = 'atleta-card';
-        div.innerHTML = `<button type="button" onclick="this.parentElement.remove()" style="position:absolute; top:10px; right:10px; color:red; border:none; background:none; font-weight:bold; cursor:pointer;">X</button>
+        div.innerHTML = `
+            <button type="button" onclick="this.parentElement.remove()" style="position:absolute; top:10px; right:10px; color:red; border:none; background:none; font-weight:bold; cursor:pointer;">X</button>
             <div class="atleta-grid">
-                <input type="text" class="nome" placeholder="Nome Atleta" required>
-                <input type="number" class="peso" placeholder="Peso kg" step="0.1" required>
-                <input type="number" class="eta" placeholder="Età" onchange="checkVincoli(this)" required>
+                <div><label style="font-size:0.7rem; font-weight:bold;">NOME ATLETA</label><input type="text" class="nome" required></div>
+                <div><label style="font-size:0.7rem; font-weight:bold;">PESO KG</label><input type="number" class="peso" step="0.1" required></div>
+                <div><label style="font-size:0.7rem; font-weight:bold;">ETÀ</label><input type="number" class="eta" onchange="checkVincoli(this)" required></div>
             </div>
             <div class="checkbox-group">
                 <label class="checkbox-item"><input type="checkbox" class="gara" value="Kumitè Kids"> Kumitè Kids (4-11 anni)</label>
-                <label class="checkbox-item extra-gara"><input type="checkbox" class="gara" value="Kick Jitsu"> Kick Jitsu (Dai 12 anni)</label>
-                <label class="checkbox-item extra-gara"><input type="checkbox" class="gara" value="Lotta a terra"> Lotta a terra (Dai 12 anni)</label>
+                <label class="checkbox-item extra-gara"><input type="checkbox" class="gara" value="Kick Jitsu"> Kick Jitsu (7-15 anni)</label>
+                <label class="checkbox-item extra-gara"><input type="checkbox" class="gara" value="Lotta a terra"> Lotta a terra (7-15 anni)</label>
             </div>`;
         container.appendChild(div);
     }
+
     function checkVincoli(input) {
         const card = input.closest('.atleta-card');
         const eta = parseInt(input.value);
-        const extra = card.querySelectorAll('.extra-gara');
-        if (eta >= 4 && eta <= 7) {
-            extra.forEach(el => { el.classList.add('disabilitato'); el.querySelector('input').checked = false; });
-            alert("Bambini 4-7 anni: solo Kumitè Kids consentito.");
+        const extraGare = card.querySelectorAll('.extra-gara');
+        
+        // Se l'età è inferiore a 7, Kick e Lotta vengono disabilitati
+        if (eta < 7) {
+            extraGare.forEach(el => {
+                el.classList.add('disabilitato');
+                el.querySelector('input').checked = false;
+            });
         } else {
-            extra.forEach(el => el.classList.remove('disabilitato'));
+            extraGare.forEach(el => el.classList.remove('disabilitato'));
         }
     }
+
     document.getElementById('torneoForm').onsubmit = async (e) => {
         e.preventDefault();
         const payload = {
@@ -92,11 +103,13 @@
                 gare: Array.from(card.querySelectorAll('.gara:checked')).map(c => c.value)
             }))
         };
-        alert("Invio in corso...");
+
+        alert("Invio in corso... attendi la conferma finale.");
         await fetch(GOOGLE_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
-        alert("ISCRIZIONI INVIATE!");
+        alert("ISCRIZIONI INVIATE CON SUCCESSO!");
         location.reload();
     };
+
     renderAtleta();
 </script>
 </body>
