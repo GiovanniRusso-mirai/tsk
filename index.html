@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ju Jitsu Champions Cup - TSK</title>
     <style>
-        :root { --primary: #d32f2f; --accent: #1a237e; --bg: #f4f7f6; }
-        body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); margin: 0; padding: 10px; }
+        :root { --primary: #d32f2f; --accent: #1a237e; --bg: #f4f7f6; --success: #27ae60; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: #333; margin: 0; padding: 10px; }
         .container { max-width: 800px; margin: 0 auto; background: white; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); overflow: hidden; }
         
-        /* Header con Logo e Titolo Gara */
+        /* Header */
         .header { text-align: center; padding: 25px 20px; border-bottom: 5px solid var(--primary); background: white; }
         .logo { max-width: 120px; height: auto; margin-bottom: 15px; display: block; margin-left: auto; margin-right: auto; }
         h1 { margin: 0; font-size: 1.8rem; color: var(--accent); text-transform: uppercase; }
@@ -32,15 +32,20 @@
         .disabilitato { opacity: 0.4; pointer-events: none; text-decoration: line-through; }
         
         .medica-box { background: #fff5f5; border: 1px solid var(--primary); padding: 15px; border-radius: 8px; margin: 25px 0; display: flex; align-items: flex-start; gap: 12px; }
-        .medica-box input { width: 20px; height: 20px; margin-top: 2px; flex-shrink: 0; cursor: pointer; }
+        .medica-box input { width: 18px; height: 18px; margin-top: 2px; flex-shrink: 0; cursor: pointer; }
         .medica-box label { text-transform: none; font-weight: 500; font-size: 0.85rem; color: #b71c1c; cursor: pointer; line-height: 1.4; }
 
         .btn-submit { width: 100%; padding: 18px; background: var(--primary); color: white; border: none; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 1.2rem; transition: background 0.2s; }
         .btn-submit:hover { background: #b71c1c; }
         .btn-add { width: 100%; padding: 15px; background: #fff; border: 2px dashed #bbb; color: #555; cursor: pointer; border-radius: 10px; margin-bottom: 20px; font-weight: bold; font-size: 1rem; }
-        .btn-add:hover { background: #f0f0f0; border-color: var(--accent); color: var(--accent); }
-
+        
         .remove-atleta { position: absolute; top: 10px; right: 10px; color: #ff5252; background: none; border: none; font-weight: bold; cursor: pointer; font-size: 0.8rem; }
+
+        /* Messaggi in pagina */
+        #statusMessage { display: none; margin-top: 20px; padding: 15px; border-radius: 8px; text-align: center; font-weight: bold; }
+        .status-loading { background: #e3f2fd; color: #1565c0; border: 1px solid #90caf9; }
+        .status-success { background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; }
+        .status-error { background: #ffebee; color: #c62828; border: 1px solid #ef9a9a; }
 
         @media (max-width: 600px) {
             .grid, .atleta-grid { grid-template-columns: 1fr; }
@@ -52,7 +57,7 @@
 
 <div class="container">
     <div class="header">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Crystal_Clear_app_Login_Manager.png/120px-Crystal_Clear_app_Login_Manager.png" id="mainLogo" class="logo" alt="Logo">
+        <img src="299940804_510546830876553_8892043649465700842_n.png" class="logo" alt="Logo TSK" onerror="this.style.display='none'">
         <h1>Ju Jitsu Champions Cup</h1>
         <h2>Tai Shin Do Kai Ryu</h2>
     </div>
@@ -69,20 +74,27 @@
         <div class="medica-box">
             <input type="checkbox" id="checkMedica" required>
             <label for="checkMedica">
-                Dichiaro, sotto la mia responsabilità, che tutti gli atleti iscritti sono in possesso di certificato medico agonistico e assicurazione personale in corso di validità [Art. 16/17]. [cite: 1, 16, 17]
+                Dichiaro, sotto la mia responsabilità, che tutti gli atleti iscritti sono in possesso di certificato medico agonistico e assicurazione personale in corso di validità [Art. [cite_start]16/17]. [cite: 1, 16, 17]
             </label>
         </div>
 
-        <button type="submit" class="btn-submit">REVISIONE E INVIO</button>
+        <button type="submit" id="submitBtn" class="btn-submit">REVISIONE E INVIO</button>
+        <div id="statusMessage"></div>
     </form>
 </div>
 
 <script>
     const GOOGLE_URL = "https://script.google.com/macros/s/AKfycbyy9TpDCSXKG6hJCq3M16hL9hx4icWzBfI_SiYhjc5xKa7ViopcrHsu2K8-gg0Mhbk-kw/exec";
-    
-    // Inserisci qui l'URL del tuo logo ufficiale se quello sopra è un placeholder
-    const LOGO_TSK = "https://scontent-fco2-1.xx.fbcdn.net/v/t39.30808-6/299940804_510546830876553_8892043649465700842_n.png?_nc_cat=109&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=KfRaKBcy4bYQ7kNvwFtD0vT&_nc_oc=AdkaCiXWCryfJoULFVYg7WqF66mFvgnD73pCypsoJexFYoXcJK4hiXQ1fWi0T7RxClU&_nc_zt=23&_nc_ht=scontent-fco2-1.xx&_nc_gid=BSB6zC-CWoJRDzEBzyPNbA&oh=00_AftdHc8vIl8F0rP-oic5rZgt9rrt7UQ2uuNWmDMUb5rHiQ&oe=6983C883";
-    document.getElementById('mainLogo').src = LOGO_TSK;
+
+    function showStatus(text, type) {
+        const msg = document.getElementById('statusMessage');
+        msg.innerText = text;
+        msg.className = 'status-' + type;
+        msg.style.display = 'block';
+        if(type === 'success') {
+            setTimeout(() => { location.reload(); }, 3000);
+        }
+    }
 
     function renderAtleta() {
         const container = document.getElementById('listaAtleti');
@@ -90,7 +102,7 @@
         const div = document.createElement('div');
         div.className = 'atleta-card';
         div.innerHTML = `
-            <button type="button" class="remove-atleta" onclick="this.parentElement.remove()">ELIMINA ATLETA</button>
+            <button type="button" class="remove-atleta" onclick="this.parentElement.remove()">ELIMINA</button>
             <div style="margin-bottom:15px; color:var(--accent); font-weight:bold;">ISCRIZIONE ATLETA #${count}</div>
             <div class="atleta-grid">
                 <div><label>Nome e Cognome</label><input type="text" class="nome" required></div>
@@ -126,9 +138,13 @@
         
         const atletiCards = document.getElementsByClassName('atleta-card');
         if (atletiCards.length === 0) {
-            alert("Aggiungi almeno un atleta!");
+            showStatus("Aggiungi almeno un atleta!", "error");
             return;
         }
+
+        const submitBtn = document.getElementById('submitBtn');
+        submitBtn.disabled = true;
+        showStatus("Invio in corso... attendi la conferma.", "loading");
 
         const payload = {
             palestra: document.getElementById('palestra').value,
@@ -142,13 +158,12 @@
             }))
         };
 
-        alert("Invio in corso... non chiudere la pagina.");
         try {
             await fetch(GOOGLE_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
-            alert("ISCRIZIONI INVIATE CON SUCCESSO!");
-            location.reload();
+            showStatus("ISCRIZIONI INVIATE CON SUCCESSO! La pagina si ricaricherà tra poco.", "success");
         } catch (error) {
-            alert("Errore nell'invio. Verifica la connessione.");
+            showStatus("Errore nell'invio. Verifica la connessione e riprova.", "error");
+            submitBtn.disabled = false;
         }
     };
 
