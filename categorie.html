@@ -4,483 +4,400 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TSK PRESIDENT CUP - Tabelloni Ufficiali</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --primary: #c0392b; /* Rosso TSK */
-            --dark: #1a1a1a;
-            --light: #f4f4f9;
+            --primary: #c0392b; 
+            --dark: #1e272e;
+            --light: #f1f2f6;
+            --white: #ffffff;
             --gold: #f1c40f;
-            --kick: #3498db;
-            --lotta: #9b59b6;
-            --kumite: #e74c3c;
+            --kick: #3498db;   /* Blu per Kick */
+            --lotta: #9b59b6;  /* Viola per Lotta */
+            --kumite: #e74c3c; /* Rosso per Kumite */
+            --gray: #bdc3c7;
         }
 
-        body { font-family: 'Roboto', sans-serif; background-color: var(--light); margin: 0; padding-bottom: 50px; color: #333; }
+        body { font-family: 'Open Sans', sans-serif; background-color: var(--light); margin: 0; color: #2c3e50; }
         
-        /* HEADER HERO */
+        /* === HERO HEADER === */
         header {
-            background: linear-gradient(135deg, #1a1a1a 0%, #2c3e50 100%);
+            background: linear-gradient(135deg, #1e272e 0%, #34495e 100%);
             color: white;
-            padding: 30px 20px;
+            padding: 40px 20px;
             text-align: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
             border-bottom: 5px solid var(--primary);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
         }
-        .logo-container img {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            border: 4px solid white;
-            box-shadow: 0 0 20px rgba(255,255,255,0.2);
-            object-fit: cover;
-            background: white;
+        .logo-wrap {
+            width: 130px; height: 130px; margin: 0 auto 15px;
+            background: white; border-radius: 50%; padding: 5px;
+            box-shadow: 0 0 25px rgba(255,255,255,0.15);
         }
-        h1 { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 2rem; margin: 15px 0 5px 0; text-transform: uppercase; letter-spacing: 1px; }
-        p.subtitle { color: #ccc; font-size: 1rem; margin: 0; }
+        .logo-wrap img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+        h1 { font-family: 'Montserrat', sans-serif; font-weight: 800; text-transform: uppercase; font-size: 2.2rem; margin: 0; letter-spacing: 1px; }
+        .subtitle { font-size: 1.1rem; color: #bdc3c7; margin-top: 5px; font-weight: 400; }
 
-        /* NAVIGAZIONE */
-        .nav-container {
-            position: sticky;
-            top: 0;
-            background: white;
-            z-index: 100;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            padding: 10px 0;
+        /* === NAVIGATION === */
+        .nav-wrapper { position: sticky; top: 0; z-index: 1000; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 15px 0; }
+        .nav-pills { display: flex; justify-content: center; gap: 15px; max-width: 900px; margin: 0 auto; padding: 0 15px; }
+        .nav-btn {
+            border: none; background: #dfe4ea; color: #57606f;
+            padding: 12px 25px; border-radius: 50px;
+            font-weight: 700; font-family: 'Montserrat', sans-serif; text-transform: uppercase; font-size: 0.9rem;
+            cursor: pointer; transition: all 0.3s ease;
+            display: flex; align-items: center; gap: 8px;
         }
-        .nav-tabs { display: flex; justify-content: center; gap: 10px; max-width: 800px; margin: 0 auto; padding: 0 10px; }
-        .tab-btn {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            background: #eee;
-            border-radius: 8px;
-            font-weight: 700;
-            color: #555;
-            cursor: pointer;
-            transition: 0.3s;
-            text-transform: uppercase;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
+        .nav-btn:hover { transform: translateY(-2px); }
+        .nav-btn.active { color: white; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        
+        .nav-btn[data-target="kick"].active { background: var(--kick); }
+        .nav-btn[data-target="lotta"].active { background: var(--lotta); }
+        .nav-btn[data-target="kumite"].active { background: var(--kumite); }
+
+        /* === SEARCH === */
+        .search-bar { max-width: 600px; margin: 25px auto; position: relative; padding: 0 20px; }
+        .search-bar input {
+            width: 100%; padding: 15px 20px 15px 50px;
+            border-radius: 12px; border: 2px solid #dfe4ea;
+            font-size: 1rem; transition: 0.3s; box-sizing: border-box;
         }
-        .tab-btn.active { background: var(--dark); color: white; transform: scale(1.05); box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
-        .tab-btn.kick.active { background: var(--kick); }
-        .tab-btn.lotta.active { background: var(--lotta); }
-        .tab-btn.kumite.active { background: var(--kumite); }
+        .search-bar input:focus { border-color: var(--dark); outline: none; }
+        .search-icon { position: absolute; left: 35px; top: 50%; transform: translateY(-50%); color: #a4b0be; }
 
-        /* SEARCH BAR */
-        .search-container { max-width: 600px; margin: 20px auto; padding: 0 20px; position: relative; }
-        .search-input {
-            width: 100%;
-            padding: 15px 20px 15px 45px;
-            border: 2px solid #ddd;
-            border-radius: 30px;
-            font-size: 1rem;
-            transition: 0.3s;
-            box-sizing: border-box;
-        }
-        .search-input:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 10px rgba(192, 57, 43, 0.2); }
-        .search-icon { position: absolute; left: 35px; top: 50%; transform: translateY(-50%); color: #999; }
+        /* === CONTENT === */
+        main { max-width: 1000px; margin: 0 auto; padding: 0 20px 60px; min-height: 60vh; }
+        .discipline-view { display: none; animation: fadeIn 0.5s ease; }
+        .discipline-view.active { display: block; }
 
-        /* CONTENT AREA */
-        .discipline-section { display: none; max-width: 900px; margin: 0 auto; padding: 10px; animation: fadeIn 0.5s; }
-        .discipline-section.active { display: block; }
-
-        /* CATEGORY CARD (ACCORDION) */
-        .category-block {
-            background: white;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            overflow: hidden;
-            border: 1px solid #eee;
+        /* === CATEGORY CARD === */
+        .cat-card {
+            background: white; border-radius: 15px; margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05); overflow: hidden;
+            border: 1px solid rgba(0,0,0,0.03);
         }
         .cat-header {
-            background: #fff;
-            padding: 15px 20px;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #f0f0f0;
+            padding: 18px 25px; cursor: pointer;
+            display: flex; justify-content: space-between; align-items: center;
+            background: #fff; border-bottom: 1px solid #f1f2f6; transition: 0.2s;
         }
-        .cat-header:hover { background: #f9f9f9; }
-        .cat-title { font-weight: 700; font-size: 1.1rem; color: var(--dark); }
-        .cat-badge { font-size: 0.8rem; background: #eee; padding: 4px 8px; border-radius: 4px; color: #666; }
-        .cat-body { padding: 20px; background: #fafafa; display: block; } /* Aperto di default o chiuso */
-
-        /* BRACKET VISUALIZATION */
-        .match-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            justify-content: center;
-        }
+        .cat-header:hover { background: #f8f9fa; }
+        .cat-title { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 1.15rem; color: var(--dark); display: flex; align-items: center; gap: 10px; }
+        .cat-tags { display: flex; gap: 5px; }
+        .tag { font-size: 0.75rem; padding: 4px 8px; border-radius: 6px; font-weight: 600; text-transform: uppercase; }
+        .tag-age { background: #e3f2fd; color: #1565c0; }
+        .tag-wgt { background: #e8f5e9; color: #2e7d32; }
+        
+        .cat-body { display: block; padding: 20px; background: #fafafa; }
+        
+        /* === MATCH CARDS === */
+        .match-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
         
         .match-card {
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
-            width: 300px;
-            position: relative;
-            border-left: 5px solid #ccc;
+            background: white; border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+            border-left: 5px solid #ccc; position: relative;
         }
-        
-        /* Discipline Colors Borders */
         .kick .match-card { border-left-color: var(--kick); }
         .lotta .match-card { border-left-color: var(--lotta); }
         .kumite .match-card { border-left-color: var(--kumite); }
 
-        .match-id {
-            background: #eee;
-            color: #666;
-            font-size: 0.7rem;
-            padding: 4px 10px;
-            text-align: right;
-            border-top-right-radius: 8px;
-            font-weight: bold;
+        .match-round {
+            font-size: 0.7rem; font-weight: 700; color: #95a5a6;
+            text-transform: uppercase; padding: 8px 15px; border-bottom: 1px solid #f1f2f6;
+            display: flex; justify-content: space-between;
         }
 
-        .athlete-row {
-            padding: 10px 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #f0f0f0;
-        }
-        .athlete-row:last-child { border-bottom: none; }
-        .athlete-name { font-weight: 600; font-size: 0.95rem; display: block; }
-        .athlete-meta { font-size: 0.75rem; color: #888; display: block; }
+        .athlete { padding: 12px 15px; display: flex; align-items: center; justify-content: space-between; }
+        .athlete:first-of-type { border-bottom: 1px solid #f5f6fa; }
         
-        .vs-badge {
-            position: absolute;
-            top: 50%;
-            left: -12px;
-            transform: translateY(-50%);
-            background: white;
-            border: 2px solid #ccc;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.6rem;
-            font-weight: bold;
-            color: #666;
-            z-index: 2;
-        }
-
-        /* WARNING BADGE */
-        .warning-badge {
-            background: #ffebee;
-            color: #c62828;
-            font-size: 0.7rem;
-            padding: 5px;
-            text-align: center;
-            font-weight: bold;
-            border-top: 1px solid #ffcdd2;
-        }
-
-        /* SINGLE WINNER CARD */
-        .winner-card {
-            background: linear-gradient(135deg, #fff9c4 0%, #fff 100%);
-            border: 2px solid var(--gold);
-            border-radius: 8px;
-            padding: 15px;
-            text-align: center;
-            width: 100%;
-            max-width: 400px;
-            margin: 0 auto;
-            position: relative;
-        }
-        .trophy-icon { color: var(--gold); font-size: 2rem; margin-bottom: 10px; display: block; }
-        .winner-label { color: #f39c12; font-weight: 800; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; }
-        .winner-name { font-size: 1.2rem; font-weight: 800; color: #333; margin: 5px 0; }
+        .ath-main { display: flex; flex-direction: column; }
+        .ath-name { font-weight: 700; color: #2f3542; font-size: 0.95rem; }
+        .ath-club { font-size: 0.75rem; color: #747d8c; margin-top: 2px; }
         
-        /* ANIMATIONS */
+        .ath-stats { display: flex; gap: 8px; margin-top: 4px; }
+        .stat-pill { font-size: 0.65rem; background: #f1f2f6; padding: 2px 6px; border-radius: 4px; color: #57606f; display: flex; align-items: center; gap: 3px; }
+
+        .vs-circle {
+            position: absolute; top: 50%; left: -10px; transform: translateY(-50%);
+            width: 20px; height: 20px; background: white; border: 2px solid #bdc3c7;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 0.6rem; font-weight: 800; color: #7f8c8d; z-index: 2; margin-top: 14px; /* offset header */
+        }
+
+        /* === WINNER CARD === */
+        .winner-display {
+            background: linear-gradient(135deg, #fff 0%, #fff9c4 100%);
+            border: 2px solid var(--gold); border-radius: 10px; padding: 20px;
+            text-align: center; max-width: 400px; margin: 0 auto;
+        }
+        .win-icon { font-size: 2.5rem; color: var(--gold); margin-bottom: 10px; display: block; }
+        .win-title { font-weight: 800; color: #f39c12; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
+        .win-name { font-size: 1.3rem; font-weight: 800; margin: 10px 0 5px; color: #2c3e50; }
+
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Avviso rossa */
+        .alert-palestra { background: #ff7675; color: white; font-size: 0.7rem; padding: 2px 8px; border-radius: 10px; margin-left: auto; }
 
-        /* MOBILE OPTIMIZATIONS */
-        @media (max-width: 600px) {
-            h1 { font-size: 1.5rem; }
-            .tab-btn span { display: none; } /* Nasconde testo tabs su mobile */
-            .tab-btn i { font-size: 1.2rem; margin: 0; }
-        }
     </style>
 </head>
 <body>
 
 <header>
-    <div class="logo-container">
+    <div class="logo-wrap">
         <img src="https://giovannirusso-mirai.github.io/tsk/299940804_510546830876553_8892043649465700842_n.png" alt="TSK Logo">
     </div>
     <h1>TSK President Cup</h1>
-    <p class="subtitle">Tabelloni Ufficiali & Accoppiamenti</p>
+    <div class="subtitle">Official Tournament Brackets</div>
 </header>
 
-<div class="nav-container">
-    <div class="nav-tabs">
-        <button class="tab-btn kick active" onclick="switchTab('kick')"><i class="fas fa-bolt"></i> <span>Kick Jitsu</span></button>
-        <button class="tab-btn lotta" onclick="switchTab('lotta')"><i class="fas fa-hand-rock"></i> <span>Lotta a Terra</span></button>
-        <button class="tab-btn kumite" onclick="switchTab('kumite')"><i class="fas fa-fist-raised"></i> <span>Kumitè Kids</span></button>
+<div class="nav-wrapper">
+    <div class="nav-pills">
+        <button class="nav-btn active" data-target="kick" onclick="switchView('kick')">
+            <i class="fas fa-bolt"></i> Kick Jitsu
+        </button>
+        <button class="nav-btn" data-target="lotta" onclick="switchView('lotta')">
+            <i class="fas fa-hand-rock"></i> Lotta Terra
+        </button>
+        <button class="nav-btn" data-target="kumite" onclick="switchView('kumite')">
+            <i class="fas fa-fist-raised"></i> Kumitè
+        </button>
     </div>
 </div>
 
-<div class="search-container">
+<div class="search-bar">
     <i class="fas fa-search search-icon"></i>
-    <input type="text" id="searchInput" class="search-input" placeholder="Cerca atleta, palestra o categoria..." onkeyup="filterContent()">
+    <input type="text" id="searchInput" placeholder="Cerca atleta, categoria, peso o età..." onkeyup="filterSystem()">
 </div>
 
-<main>
-    <div id="kick" class="discipline-section kick active">
-        </div>
-
-    <div id="lotta" class="discipline-section lotta">
-        </div>
-
-    <div id="kumite" class="discipline-section kumite">
-        </div>
-</main>
+<main id="appContainer">
+    </main>
 
 <script>
-    // ==========================================
-    // DATABASE (Tutti i dati consolidati)
-    // ==========================================
-    const tournamentData = [
-        // --- KICK JITSU MATCHES ---
-        { d: 'kick', type: 'match', cat: 'F (10, 11) -28', r: 'R1 - M1', p1: 'SANTORO MELYSSA', p1i: 'ASD CS BODY ART', p2: 'VIETRI ILARIA', p2i: 'ASD CS BODY ART', note: 'SCONTRO STESSA PALESTRA' },
-        { d: 'kick', type: 'match', cat: 'F (12, 13) +55', r: 'R1 - M1', p1: 'CASABURI RAFFAELLA', p1i: 'ASD CS BODY ART', p2: 'Vittoria martusciello', p2i: 'SSD life' },
-        { d: 'kick', type: 'match', cat: 'F (12, 13) +55', r: 'R1 - M2', p1: 'Jasmine di marzo', p1i: 'SSD life', p2: 'FIORELLA CARBISIERO', p2i: 'TAI SHIN KAI' },
-        { d: 'kick', type: 'match', cat: 'F (12, 13) +55', r: 'R1 - M3', p1: 'ALESSANDRA PETRILLO', p1i: 'TAI SHIN KAI', p2: 'BYE', p2i: 'Passa il turno' },
-        { d: 'kick', type: 'match', cat: 'M (10, 11) +50', r: 'R1 - M1', p1: 'RICCO MORGAN', p1i: 'ASD CS BODY ART', p2: 'Alessandro tonelli', p2i: 'SSD life' },
-        { d: 'kick', type: 'match', cat: 'M (10, 11) +50', r: 'R1 - M2', p1: 'ANTONIO TESSITORE', p1i: 'TAI SHIN KAI', p2: 'MICHELE BORTONE', p2i: 'TAI SHIN KAI', note: 'SCONTRO STESSA PALESTRA' },
-        { d: 'kick', type: 'match', cat: 'M (10, 11) -28', r: 'R1 - M1', p1: 'Romeo Montella', p1i: 'SSD life', p2: 'Christian caturano', p2i: 'SSD life', note: 'SCONTRO STESSA PALESTRA' },
-        { d: 'kick', type: 'match', cat: 'M (10, 11) -40', r: 'R1 - M1', p1: 'VITALE PIETRO', p1i: 'ASD CS BODY ART', p2: 'Mario ingenito', p2i: 'SSD life' },
-        { d: 'kick', type: 'match', cat: 'M (10, 11) -45', r: 'R1 - M1', p1: 'CASTELLUCCIO GIUSEPPE', p1i: 'ASD CS BODY ART', p2: 'Gabriele improta', p2i: 'SSD life' },
-        { d: 'kick', type: 'match', cat: 'M (10, 11) -45', r: 'R1 - M2', p1: 'Vincenzo ombra', p1i: 'SSD life', p2: 'FABIO DI SANTO', p2i: 'TAI SHIN KAI' },
-        { d: 'kick', type: 'match', cat: 'M (12, 13) +55', r: 'R1 - M1', p1: 'GIUSEPPE SIENO', p1i: 'TAI SHIN KAI', p2: 'CASABURI ALFONSO', p2i: 'ASD CS BODY ART' },
-        { d: 'kick', type: 'match', cat: 'M (12, 13) -35', r: 'R1 - M1', p1: 'Simone caturano', p1i: 'SSD life', p2: 'SAMUELE CHIARIELLO', p2i: 'TAI SHIN KAI' },
-        { d: 'kick', type: 'match', cat: 'M (12, 13) -40', r: 'R1 - M1', p1: 'Fabrizio minopoli', p1i: 'SSD life', p2: 'IVAN CASABURI', p2i: 'TAI SHIN KAI' },
-        { d: 'kick', type: 'match', cat: 'M (14, 15) +65', r: 'R1 - M1', p1: 'MATTEO PESCE', p1i: 'ASD BUSHIDO', p2: 'Alessandro graniglia', p2i: 'SSD life' },
-        { d: 'kick', type: 'match', cat: 'M (14, 15) +65', r: 'R1 - M2', p1: 'Raoul Gianlavigna', p1i: 'SSD life', p2: 'DOMENICO DI GIORGIO', p2i: 'TAI SHIN KAI' },
+    // ===============================================
+    // 1. IL DATABASE (Arricchito con Info Età/Peso)
+    // ===============================================
+    const db = [
+        // KICK JITSU
+        { d: 'kick', type: 'match', cat: 'F (10, 11) -28', r: 'R1', p1: 'SANTORO MELYSSA', p1i: '11 Anni • 25kg • Body Art', p2: 'VIETRI ILARIA', p2i: '11 Anni • 26kg • Body Art', note: 'DERBY' },
+        { d: 'kick', type: 'match', cat: 'F (12, 13) +55', r: 'R1', p1: 'CASABURI RAFFAELLA', p1i: '13 Anni • 68kg • Body Art', p2: 'Vittoria martusciello', p2i: '12 Anni • 63kg • SSD Life' },
+        { d: 'kick', type: 'match', cat: 'F (12, 13) +55', r: 'R1', p1: 'Jasmine di marzo', p1i: '12 Anni • 89kg • SSD Life', p2: 'FIORELLA CARBISIERO', p2i: '13 Anni • 60kg • TSK' },
+        { d: 'kick', type: 'match', cat: 'M (10, 11) +50', r: 'R1', p1: 'RICCO MORGAN', p1i: '10 Anni • 63kg • Body Art', p2: 'Alessandro tonelli', p2i: '10 Anni • 54kg • SSD Life' },
+        { d: 'kick', type: 'match', cat: 'M (10, 11) +50', r: 'R1', p1: 'ANTONIO TESSITORE', p1i: '10 Anni • 57kg • TSK', p2: 'MICHELE BORTONE', p2i: '11 Anni • 67kg • TSK', note: 'DERBY' },
+        { d: 'kick', type: 'match', cat: 'M (10, 11) -28', r: 'R1', p1: 'Romeo Montella', p1i: '10 Anni • 28kg • SSD Life', p2: 'Christian caturano', p2i: '11 Anni • 26kg • SSD Life', note: 'DERBY' },
+        { d: 'kick', type: 'match', cat: 'M (10, 11) -40', r: 'R1', p1: 'VITALE PIETRO', p1i: '11 Anni • 40kg • Body Art', p2: 'Mario ingenito', p2i: '10 Anni • 39kg • SSD Life' },
+        { d: 'kick', type: 'match', cat: 'M (10, 11) -45', r: 'R1', p1: 'CASTELLUCCIO GIUSEPPE', p1i: '10 Anni • 45kg • Body Art', p2: 'Gabriele improta', p2i: '11 Anni • 44kg • SSD Life' },
+        { d: 'kick', type: 'match', cat: 'M (10, 11) -45', r: 'R1', p1: 'Vincenzo ombra', p1i: '10 Anni • 44kg • SSD Life', p2: 'FABIO DI SANTO', p2i: '11 Anni • 42kg • TSK' },
+        { d: 'kick', type: 'match', cat: 'M (12, 13) +55', r: 'R1', p1: 'GIUSEPPE SIENO', p1i: '12 Anni • 58kg • TSK', p2: 'CASABURI ALFONSO', p2i: '13 Anni • 57kg • Body Art' },
+        { d: 'kick', type: 'match', cat: 'M (12, 13) -35', r: 'R1', p1: 'Simone caturano', p1i: '12 Anni • 34kg • SSD Life', p2: 'SAMUELE CHIARIELLO', p2i: '12 Anni • 34kg • TSK' },
+        { d: 'kick', type: 'match', cat: 'M (12, 13) -40', r: 'R1', p1: 'Fabrizio minopoli', p1i: '12 Anni • 39kg • SSD Life', p2: 'IVAN CASABURI', p2i: '13 Anni • 38kg • TSK' },
+        { d: 'kick', type: 'match', cat: 'M (14, 15) +65', r: 'R1', p1: 'MATTEO PESCE', p1i: '15 Anni • 75kg • Bushido', p2: 'Alessandro graniglia', p2i: '15 Anni • 71kg • SSD Life' },
+        { d: 'kick', type: 'match', cat: 'M (14, 15) +65', r: 'R1', p1: 'Raoul Gianlavigna', p1i: '15 Anni • 70kg • SSD Life', p2: 'DOMENICO DI GIORGIO', p2i: '14 Anni • 81kg • TSK' },
         
-        // --- KICK JITSU VINCITORI A TAVOLINO ---
-        { d: 'kick', type: 'winner', cat: 'F (10, 11) -32', p1: 'MAZZEO LINDA', p1i: 'ASD CS BODY ART' },
-        { d: 'kick', type: 'winner', cat: 'F (10, 11) -36', p1: 'NAPPI ALESSANDRA', p1i: 'ASD CS BODY ART' },
-        { d: 'kick', type: 'winner', cat: 'F (10, 11) -45', p1: 'PLAITANO LIDIA', p1i: 'ASD CS BODY ART' },
-        { d: 'kick', type: 'winner', cat: 'F (14, 15) -50', p1: 'LANDI MICHELA', p1i: 'ASD CS BODY ART' },
-        { d: 'kick', type: 'winner', cat: 'M (10, 11) -36', p1: 'Christian de Angelis', p1i: 'SSD life' },
-        { d: 'kick', type: 'winner', cat: 'M (10, 11) -50', p1: 'MARIO BATTISTA', p1i: 'TAI SHIN KAI' },
-        { d: 'kick', type: 'winner', cat: 'M (12, 13) -30', p1: 'ALFIERO FRANCESCO', p1i: 'ASD CS BODY ART' },
-        { d: 'kick', type: 'winner', cat: 'M (12, 13) -45', p1: 'LUCA D\'AMBRA', p1i: 'TAI SHIN KAI' },
-        { d: 'kick', type: 'winner', cat: 'M (12, 13) -55', p1: 'Raffaele borrelli', p1i: 'SSD life' },
-        { d: 'kick', type: 'winner', cat: 'M (14, 15) -45', p1: 'Francesco cappetta', p1i: 'SSD life' },
-        { d: 'kick', type: 'winner', cat: 'M (14, 15) -50', p1: 'Christian Corrado', p1i: 'SSD life' },
-        { d: 'kick', type: 'winner', cat: 'M (14, 15) -60', p1: 'Matteo Cozzolino', p1i: 'SSD life' },
-        { d: 'kick', type: 'winner', cat: 'M (14, 15) -65', p1: 'Gabriel caccioppoli', p1i: 'SSD life' },
-        { d: 'kick', type: 'winner', cat: 'M (6, 7) -24', p1: 'Vincenzo di vicino', p1i: 'SSD life' },
-        { d: 'kick', type: 'winner', cat: 'M (8, 9) -27', p1: 'Luigi del sole', p1i: 'SSD life' },
+        // KICK VINCITORI DIRETTI (Esempio parziale)
+        { d: 'kick', type: 'winner', cat: 'M (6, 7) -24', p1: 'Vincenzo di vicino', p1i: '7 Anni • 21kg • SSD Life' },
+        { d: 'kick', type: 'winner', cat: 'M (8, 9) -27', p1: 'Luigi del sole', p1i: '9 Anni • 27kg • SSD Life' },
 
-        // --- LOTTA A TERRA MATCHES ---
-        { d: 'lotta', type: 'match', cat: 'M (6, 7) -24', r: 'R1', p1: 'Vincenzo di vicino', p1i: 'SSD life', p2: 'Vincenzo chianese', p2i: 'SSD life', note: 'SCONTRO STESSA PALESTRA' },
-        { d: 'lotta', type: 'match', cat: 'M (8, 9) -27', r: 'R1', p1: 'Luigi del sole', p1i: 'SSD life', p2: 'SALVATORE LUONGO', p2i: 'TAI SHIN KAI' },
-        { d: 'lotta', type: 'match', cat: 'M (8, 9) -27', r: 'R1', p1: 'SALVATORE BELARDO', p1i: 'TAI SHIN KAI', p2: 'RAFFAELE CAPASSO', p2i: 'TAI SHIN KAI', note: 'SCONTRO STESSA PALESTRA' },
-        { d: 'lotta', type: 'match', cat: 'M (8, 9) -31', r: 'R1', p1: 'VINCENZO STABILE', p1i: 'ASD BUSHIDO', p2: 'DIEGO RUGGIANO', p2i: 'TAI SHIN KAI' },
-        { d: 'lotta', type: 'match', cat: 'M (8, 9) -31', r: 'R1', p1: 'NICHOLAS D\'ANGELO', p1i: 'TAI SHIN KAI', p2: 'BYE', p2i: 'Passa il turno' },
-        { d: 'lotta', type: 'match', cat: 'M (8, 9) -45', r: 'R1', p1: 'GIOVANNI ROTONDO', p1i: 'ASD BUSHIDO', p2: 'RAFFAELE PEZZELLA', p2i: 'TAI SHIN KAI' },
-        { d: 'lotta', type: 'match', cat: 'F (8, 9) -31', r: 'R1', p1: 'RITYA HASSANI', p1i: 'TAI SHIN KAI', p2: 'SILVANA MUROLO', p2i: 'TAI SHIN KAI', note: 'SCONTRO STESSA PALESTRA' },
-        { d: 'lotta', type: 'match', cat: 'M (10, 11) -28', r: 'R1', p1: 'Romeo Montella', p1i: 'SSD life', p2: 'Christian caturano', p2i: 'SSD life', note: 'SCONTRO STESSA PALESTRA' },
-        { d: 'lotta', type: 'match', cat: 'M (10, 11) -40', r: 'R1', p1: 'VITALE PIETRO', p1i: 'ASD CS BODY ART', p2: 'ALESSANDRO PESCE', p2i: 'ASD BUSHIDO' },
-        { d: 'lotta', type: 'match', cat: 'M (10, 11) -40', r: 'R1', p1: 'Mario ingenito', p1i: 'SSD life', p2: 'ALESSANDRO RUGGIANO', p2i: 'TAI SHIN KAI' },
-        { d: 'lotta', type: 'match', cat: 'M (10, 11) -45', r: 'R1', p1: 'CASTELLUCCIO GIUSEPPE', p1i: 'ASD CS BODY ART', p2: 'Gabriele improta', p2i: 'SSD life' },
-        { d: 'lotta', type: 'match', cat: 'M (10, 11) -45', r: 'R1', p1: 'Vincenzo ombra', p1i: 'SSD life', p2: 'FABIO DI SANTO', p2i: 'TAI SHIN KAI' },
-        { d: 'lotta', type: 'match', cat: 'M (10, 11) -50', r: 'R1', p1: 'NICOLA SIENO', p1i: 'TAI SHIN KAI', p2: 'MATTEO MASI', p2i: 'ASD BUSHIDO' },
-        { d: 'lotta', type: 'match', cat: 'M (10, 11) -50', r: 'R1', p1: 'MARIO BATTISTA', p1i: 'TAI SHIN KAI', p2: 'BYE', p2i: 'Passa il turno' },
-        { d: 'lotta', type: 'match', cat: 'M (10, 11) -55', r: 'R1', p1: 'Alessandro tonelli', p1i: 'SSD life', p2: 'ANTONIO LUONGO', p2i: 'TAI SHIN KAI' },
-        { d: 'lotta', type: 'match', cat: 'M (10, 11) +55', r: 'R1', p1: 'ANTONIO MERENDA', p1i: 'TAI SHIN KAI', p2: 'ANTONIO TESSITORE', p2i: 'TAI SHIN KAI', note: 'SCONTRO STESSA PALESTRA' },
-        { d: 'lotta', type: 'match', cat: 'M (10, 11) +55', r: 'R1', p1: 'RICCO MORGAN', p1i: 'ASD CS BODY ART', p2: 'ANTONIO MARANDOLA', p2i: 'ASD BUSHIDO' },
-        { d: 'lotta', type: 'match', cat: 'F (10, 11) -28', r: 'R1', p1: 'SANTORO MELYSSA', p1i: 'ASD CS BODY ART', p2: 'VIETRI ILARIA', p2i: 'ASD CS BODY ART', note: 'SCONTRO STESSA PALESTRA' },
-        { d: 'lotta', type: 'match', cat: 'F (10, 11) -45', r: 'R1', p1: 'PLAITANO LIDIA', p1i: 'ASD CS BODY ART', p2: 'ALESSIA DELLI COLLI', p2i: 'ASD BUSHIDO' },
-        { d: 'lotta', type: 'match', cat: 'M (12, 13) -35', r: 'R1', p1: 'Simone caturano', p1i: 'SSD life', p2: 'SAMUELE CHIARIELLO', p2i: 'TAI SHIN KAI' },
-        { d: 'lotta', type: 'match', cat: 'M (12, 13) -40', r: 'R1', p1: 'Fabrizio minopoli', p1i: 'SSD life', p2: 'IVAN CASABURI', p2i: 'TAI SHIN KAI' },
-        { d: 'lotta', type: 'match', cat: 'M (12, 13) -55', r: 'R1', p1: 'AARON CALCE', p1i: 'ASD BUSHIDO', p2: 'Raffaele borrelli', p2i: 'SSD life' },
-        { d: 'lotta', type: 'match', cat: 'M (12, 13) -60', r: 'R1', p1: 'CASABURI ALFONSO', p1i: 'ASD CS BODY ART', p2: 'GIUSEPPE SIENO', p2i: 'TAI SHIN KAI' },
-        { d: 'lotta', type: 'match', cat: 'F (12, 13) -60', r: 'R1', p1: 'FIORELLA CARBISIERO', p1i: 'TAI SHIN KAI', p2: 'ALESSANDRA PETRILLO', p2i: 'TAI SHIN KAI', note: 'SCONTRO STESSA PALESTRA' },
-        { d: 'lotta', type: 'match', cat: 'F (12, 13) +60', r: 'R1', p1: 'CASABURI RAFFAELLA', p1i: 'ASD CS BODY ART', p2: 'Vittoria martusciello', p2i: 'SSD life' },
-        { d: 'lotta', type: 'match', cat: 'M (14, 15) -45', r: 'R1', p1: 'STAN ROBERT', p1i: 'ASD CS BODY ART', p2: 'Francesco cappetta', p2i: 'SSD life' },
-        { d: 'lotta', type: 'match', cat: 'M (14, 15) -65', r: 'R1', p1: 'SAMUELE D\'AMORE', p1i: 'ASD BUSHIDO', p2: 'Gabriel caccioppoli', p2i: 'SSD life' },
-        { d: 'lotta', type: 'match', cat: 'M (14, 15) +70', r: 'R1', p1: 'MATTEO PESCE', p1i: 'ASD BUSHIDO', p2: 'Alessandro graniglia', p2i: 'SSD life' },
+        // LOTTA A TERRA
+        { d: 'lotta', type: 'match', cat: 'M (6, 7) -24', r: 'R1', p1: 'Vincenzo di vicino', p1i: '7 Anni • 21kg • SSD Life', p2: 'Vincenzo chianese', p2i: '6 Anni • 22kg • SSD Life', note: 'DERBY' },
+        { d: 'lotta', type: 'match', cat: 'M (8, 9) -27', r: 'R1', p1: 'Luigi del sole', p1i: '9 Anni • 27kg • SSD Life', p2: 'SALVATORE LUONGO', p2i: '8 Anni • 26kg • TSK' },
+        { d: 'lotta', type: 'match', cat: 'M (8, 9) -31', r: 'R1', p1: 'VINCENZO STABILE', p1i: '8 Anni • 29kg • Bushido', p2: 'DIEGO RUGGIANO', p2i: '8 Anni • 28kg • TSK' },
+        { d: 'lotta', type: 'match', cat: 'F (8, 9) -31', r: 'R1', p1: 'RITYA HASSANI', p1i: '8 Anni • 29kg • TSK', p2: 'SILVANA MUROLO', p2i: '8 Anni • 31kg • TSK', note: 'DERBY' },
+        { d: 'lotta', type: 'match', cat: 'M (14, 15) -45', r: 'R1', p1: 'STAN ROBERT', p1i: '15 Anni • 45kg • Body Art', p2: 'Francesco cappetta', p2i: '14 Anni • 45kg • SSD Life' },
+        { d: 'lotta', type: 'match', cat: 'M (14, 15) -65', r: 'R1', p1: 'SAMUELE D\'AMORE', p1i: '15 Anni • 65kg • Bushido', p2: 'Gabriel caccioppoli', p2i: '14 Anni • 63kg • SSD Life' },
 
-        // --- LOTTA A TERRA VINCITORI A TAVOLINO ---
-        { d: 'lotta', type: 'winner', cat: 'M (6, 7) -28', p1: 'HAROUN KHADRA', p1i: 'TAI SHIN KAI' },
-        { d: 'lotta', type: 'winner', cat: 'M (6, 7) -32', p1: 'Matthias longobardi', p1i: 'SSD life' },
-        { d: 'lotta', type: 'winner', cat: 'M (8, 9) -40', p1: 'ALESSANDRO TESSITORE', p1i: 'TAI SHIN KAI' },
-        { d: 'lotta', type: 'winner', cat: 'F (8, 9) -27', p1: 'CLAUDIA VITALE', p1i: 'TAI SHIN KAI' },
-        { d: 'lotta', type: 'winner', cat: 'F (8, 9) -45', p1: 'RITAJ HASSANI', p1i: 'TAI SHIN KAI' },
-        { d: 'lotta', type: 'winner', cat: 'M (10, 11) -36', p1: 'Christian de Angelis', p1i: 'SSD life' },
-        { d: 'lotta', type: 'winner', cat: 'F (10, 11) -32', p1: 'MAZZEO LINDA', p1i: 'ASD CS BODY ART' },
-        { d: 'lotta', type: 'winner', cat: 'F (10, 11) -36', p1: 'NAPPI ALESSANDRA', p1i: 'ASD CS BODY ART' },
-        { d: 'lotta', type: 'winner', cat: 'F (10, 11) -40', p1: 'INSAFE KHADRA', p1i: 'TAI SHIN KAI' },
-        { d: 'lotta', type: 'winner', cat: 'F (10, 11) -55', p1: 'ANTONIA DI STASIO', p1i: 'ASD BUSHIDO' },
-        { d: 'lotta', type: 'winner', cat: 'M (12, 13) -30', p1: 'ALFIERO FRANCESCO', p1i: 'ASD CS BODY ART' },
-        { d: 'lotta', type: 'winner', cat: 'M (12, 13) +60', p1: 'PASQUALE BELARDO', p1i: 'TAI SHIN KAI' },
-        { d: 'lotta', type: 'winner', cat: 'F (12, 13) -40', p1: 'ASIA RESARCHI', p1i: 'ASD BUSHIDO' },
-        { d: 'lotta', type: 'winner', cat: 'M (14, 15) -50', p1: 'Christian Corrado', p1i: 'SSD life' },
-        { d: 'lotta', type: 'winner', cat: 'M (14, 15) -60', p1: 'Matteo Cozzolino', p1i: 'SSD life' },
-        { d: 'lotta', type: 'winner', cat: 'M (14, 15) -70', p1: 'Raoul Gianlavigna', p1i: 'SSD life' },
-        { d: 'lotta', type: 'winner', cat: 'F (14, 15) -50', p1: 'LANDI MICHELA', p1i: 'ASD CS BODY ART' },
-
-        // --- KUMITE KIDS MATCHES ---
-        { d: 'kumite', type: 'match', cat: 'MIX (6, 7) -24', r: 'R1', p1: 'Vincenzo chianese', p1i: 'SSD life', p2: 'GABRIEL FERRARA', p2i: 'TAI SHIN KAI' },
-        { d: 'kumite', type: 'match', cat: 'MIX (6, 7) -24', r: 'R1', p1: 'ANTONIO FUSCO', p1i: 'TAI SHIN KAI', p2: 'RAFFAELE DI MURO', p2i: 'TAI SHIN KAI', note: 'SCONTRO STESSA PALESTRA' },
-        { d: 'kumite', type: 'match', cat: 'MIX (6, 7) -24', r: 'R1', p1: 'VITO BORTONE', p1i: 'TAI SHIN KAI', p2: 'BYE', p2i: 'Passa il turno' },
-        { d: 'kumite', type: 'match', cat: 'MIX (6, 7) -28', r: 'R1', p1: 'RAFFAELA FERRARA', p1i: 'TAI SHIN KAI', p2: 'EDUARDO PEZZULLO', p2i: 'TAI SHIN KAI', note: 'SCONTRO STESSA PALESTRA' },
-        { d: 'kumite', type: 'match', cat: 'MIX (6, 7) -32', r: 'R1', p1: 'Matthias longobardi', p1i: 'SSD life', p2: 'GIUSEPPE PASCARELLA', p2i: 'TAI SHIN KAI' },
-        { d: 'kumite', type: 'match', cat: 'MIX (6, 7) -32', r: 'R1', p1: 'MARIO BUONANNO', p1i: 'TAI SHIN KAI', p2: 'BYE', p2i: 'Passa il turno' },
-        { d: 'kumite', type: 'match', cat: 'MIX (8, 9) -40', r: 'R1', p1: 'VERONICA CASTALDO', p1i: 'TAI SHIN KAI', p2: 'MARIA BENCIVENGA', p2i: 'TAI SHIN KAI', note: 'SCONTRO STESSA PALESTRA' },
-        { d: 'kumite', type: 'match', cat: 'MIX (8, 9) -40', r: 'R1', p1: 'SARA IOVINELLA', p1i: 'TAI SHIN KAI', p2: 'BYE', p2i: 'Passa il turno' },
-        { d: 'kumite', type: 'match', cat: 'MIX (8, 9) -45', r: 'R1', p1: 'ANTONIO DI MURO', p1i: 'TAI SHIN KAI', p2: 'ROBERTO RUSSO', p2i: 'TAI SHIN KAI', note: 'SCONTRO STESSA PALESTRA' },
-
-        // --- KUMITE KIDS VINCITORI A TAVOLINO ---
-        { d: 'kumite', type: 'winner', cat: 'MIX (10, 11) -32', p1: 'GIOIA BELARDO', p1i: 'TAI SHIN KAI' },
-        { d: 'kumite', type: 'winner', cat: 'MIX (6, 7) -37', p1: 'ARTEM PEREHKREST', p1i: 'TAI SHIN KAI' },
-        { d: 'kumite', type: 'winner', cat: 'MIX (8, 9) -23', p1: 'DOMENICO MOZZILLO', p1i: 'TAI SHIN KAI' },
-        { d: 'kumite', type: 'winner', cat: 'MIX (8, 9) -35', p1: 'REBECCA MICILLO', p1i: 'TAI SHIN KAI' },
-        { d: 'kumite', type: 'winner', cat: 'MIX (8, 9) -50', p1: 'PIETRO FORTINO', p1i: 'TAI SHIN KAI' },
-        { d: 'kumite', type: 'winner', cat: 'MIX (3) -20.5', p1: 'LEONARDO OLIVA', p1i: 'ASD BUSHIDO' }
+        // KUMITE KIDS
+        { d: 'kumite', type: 'match', cat: 'MIX (6, 7) -24', r: 'R1', p1: 'Vincenzo chianese', p1i: '6 Anni • 22kg • SSD Life', p2: 'GABRIEL FERRARA', p2i: '6 Anni • 21kg • TSK' },
+        { d: 'kumite', type: 'match', cat: 'MIX (6, 7) -28', r: 'R1', p1: 'RAFFAELA FERRARA', p1i: '7 Anni • 28kg • TSK', p2: 'EDUARDO PEZZULLO', p2i: '7 Anni • 25kg • TSK', note: 'DERBY' },
+        { d: 'kumite', type: 'match', cat: 'MIX (8, 9) -40', r: 'R1', p1: 'VERONICA CASTALDO', p1i: '8 Anni • 36kg • TSK', p2: 'MARIA BENCIVENGA', p2i: '8 Anni • 38kg • TSK', note: 'DERBY' },
+        { d: 'kumite', type: 'match', cat: 'MIX (8, 9) -45', r: 'R1', p1: 'ANTONIO DI MURO', p1i: '9 Anni • 42kg • TSK', p2: 'ROBERTO RUSSO', p2i: '9 Anni • 42kg • TSK', note: 'DERBY' }
     ];
 
-    // ==========================================
-    // LOGICA DI RENDER
-    // ==========================================
-    
-    function render(data) {
-        // Pulisci contenitori
-        ['kick', 'lotta', 'kumite'].forEach(id => document.getElementById(id).innerHTML = '');
+    // ===============================================
+    // 2. MOTORE LOGICO (Sorting & Parsing)
+    // ===============================================
 
-        // Raggruppa per Categoria
-        const grouped = {};
-        data.forEach(item => {
-            const key = item.d + '|' + item.cat;
-            if(!grouped[key]) grouped[key] = [];
-            grouped[key].push(item);
-        });
+    function getCategorySortData(catName) {
+        // Esempio: "M (10, 11) -40"
+        // 1. Estrai Età Minima (il primo numero in parentesi)
+        const ageMatch = catName.match(/\((\d+)/);
+        const minAge = ageMatch ? parseInt(ageMatch[1]) : 0;
 
-        // Genera HTML
-        for(let key in grouped) {
-            const [disc, catName] = key.split('|');
-            const items = grouped[key];
-            const container = document.getElementById(disc);
+        // 2. Estrai Peso (il numero dopo - o +)
+        const wgtMatch = catName.match(/[-+](\d+)/);
+        let weight = wgtMatch ? parseInt(wgtMatch[1]) : 0;
+        
+        // Se è un peso massimo (+55), aggiungi un valore alto per metterlo dopo
+        if (catName.includes('+')) weight += 1000;
 
-            // Crea blocco categoria
-            const catBlock = document.createElement('div');
-            catBlock.className = 'category-block';
+        return { minAge, weight };
+    }
+
+    function initSystem() {
+        const disciplines = ['kick', 'lotta', 'kumite'];
+        const app = document.getElementById('appContainer');
+
+        disciplines.forEach(disc => {
+            // Crea container per ogni disciplina
+            const view = document.createElement('div');
+            view.id = disc + '-view';
+            view.className = 'discipline-view ' + (disc === 'kick' ? 'active' : '');
             
-            // Header Accordion
-            const header = document.createElement('div');
-            header.className = 'cat-header';
-            header.innerHTML = `
-                <span class="cat-title">${catName}</span>
-                <span class="cat-badge">${items.length} ${items[0].type === 'match' ? 'Match' : 'Atleta'}</span>
-            `;
-            header.onclick = function() {
-                const body = this.nextElementSibling;
-                body.style.display = body.style.display === 'none' ? 'block' : 'none';
-            };
-
-            const body = document.createElement('div');
-            body.className = 'cat-body';
+            // Filtra match della disciplina
+            const discData = db.filter(m => m.d === disc);
             
-            const matchContainer = document.createElement('div');
-            matchContainer.className = 'match-container';
+            // Raggruppa per Categoria
+            const grouped = {};
+            discData.forEach(item => {
+                if(!grouped[item.cat]) grouped[item.cat] = [];
+                grouped[item.cat].push(item);
+            });
 
-            // Controlla se è un vincitore diretto o match
-            if(items.length === 1 && items[0].type === 'winner') {
-                const w = items[0];
-                matchContainer.innerHTML = `
-                    <div class="winner-card">
-                        <i class="fas fa-trophy trophy-icon"></i>
-                        <div class="winner-label">Campione di Categoria</div>
-                        <div class="winner-label" style="font-size:0.7rem; color:#888;">Senza Avversario</div>
-                        <div class="winner-name">${w.p1}</div>
-                        <div class="athlete-meta">${w.p1i}</div>
-                    </div>
-                `;
+            // --- ORDINAMENTO CATEGORIE (LOGICA RICHIESTA) ---
+            const sortedCats = Object.keys(grouped).sort((a, b) => {
+                const sortA = getCategorySortData(a);
+                const sortB = getCategorySortData(b);
+
+                // Prima ordina per ETÀ
+                if (sortA.minAge !== sortB.minAge) {
+                    return sortA.minAge - sortB.minAge;
+                }
+                // Poi ordina per PESO
+                return sortA.weight - sortB.weight;
+            });
+
+            // Genera HTML
+            if (sortedCats.length === 0) {
+                view.innerHTML = `<div style="text-align:center; padding:50px; color:#999;">Nessuna gara caricata per ${disc}</div>`;
             } else {
-                items.forEach(m => {
-                    const card = document.createElement('div');
-                    card.className = 'match-card';
-                    card.innerHTML = `
-                        <div class="match-id">${m.r || 'Gara'}</div>
-                        <div class="athlete-row">
-                            <div>
-                                <span class="athlete-name">${m.p1}</span>
-                                <span class="athlete-meta">${m.p1i}</span>
+                sortedCats.forEach(catName => {
+                    const matches = grouped[catName];
+                    const sortInfo = getCategorySortData(catName);
+                    
+                    // Header Categoria
+                    let html = `
+                        <div class="cat-card">
+                            <div class="cat-header" onclick="toggleCat(this)">
+                                <div class="cat-title">
+                                    ${catName}
+                                    <div class="cat-tags">
+                                        <span class="tag tag-age">${sortInfo.minAge}+ Anni</span>
+                                        <span class="tag tag-wgt">${sortInfo.weight > 900 ? '+' + (sortInfo.weight-1000) : '-' + sortInfo.weight} Kg</span>
+                                    </div>
+                                </div>
+                                <i class="fas fa-chevron-down" style="color:#ccc"></i>
                             </div>
-                        </div>
-                        <div class="vs-badge">VS</div>
-                        <div class="athlete-row">
-                            <div>
-                                <span class="athlete-name">${m.p2}</span>
-                                <span class="athlete-meta">${m.p2i}</span>
-                            </div>
-                        </div>
-                        ${m.note ? `<div class="warning-badge"><i class="fas fa-exclamation-triangle"></i> ${m.note}</div>` : ''}
+                            <div class="cat-body">
+                                <div class="match-grid ${disc}">
                     `;
-                    matchContainer.appendChild(card);
+
+                    // Loop Match
+                    matches.forEach(m => {
+                        if (m.type === 'winner') {
+                            // Card Vincitore Diretto
+                            html += `
+                                <div class="winner-display">
+                                    <i class="fas fa-medal win-icon"></i>
+                                    <div class="win-title">Campione di Categoria</div>
+                                    <div style="font-size:0.7rem; color:#95a5a6; margin-bottom:5px;">Senza Avversario</div>
+                                    <div class="win-name">${m.p1}</div>
+                                    <div class="ath-stats" style="justify-content:center;">
+                                        ${parseInfo(m.p1i)}
+                                    </div>
+                                </div>
+                            `;
+                        } else {
+                            // Card Match
+                            html += `
+                                <div class="match-card">
+                                    <div class="match-round">
+                                        <span>${m.r}</span>
+                                        ${m.note ? `<span class="alert-palestra">${m.note}</span>` : ''}
+                                    </div>
+                                    <div class="vs-circle">VS</div>
+                                    
+                                    <div class="athlete">
+                                        <div class="ath-main">
+                                            <span class="ath-name">${m.p1}</span>
+                                            <div class="ath-stats">${parseInfo(m.p1i)}</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="athlete">
+                                        <div class="ath-main">
+                                            <span class="ath-name">${m.p2}</span>
+                                            <div class="ath-stats">${parseInfo(m.p2i)}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        }
+                    });
+
+                    html += `</div></div></div>`; // Chiudi grid, body, card
+                    view.innerHTML += html;
                 });
             }
 
-            body.appendChild(matchContainer);
-            catBlock.appendChild(header);
-            catBlock.appendChild(body);
-            container.appendChild(catBlock);
-        }
+            app.appendChild(view);
+        });
     }
 
-    // ==========================================
-    // INTERATTIVITÀ
-    // ==========================================
-
-    function switchTab(tabId) {
-        // Tabs UI
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.querySelector(`.tab-btn.${tabId}`).classList.add('active');
-
-        // Content
-        document.querySelectorAll('.discipline-section').forEach(s => s.classList.remove('active'));
-        document.getElementById(tabId).classList.add('active');
+    // Helper per creare i badge (Anni, Kg) dalle info string
+    function parseInfo(infoStr) {
+        if(!infoStr) return '';
+        // Cerca pattern come "10 Anni", "63kg"
+        // Crea pillole visive
+        return infoStr.split('•').map(bit => {
+            return `<span class="stat-pill">${bit.trim()}</span>`;
+        }).join('');
     }
 
-    function filterContent() {
-        const query = document.getElementById('searchInput').value.toLowerCase();
+    // ===============================================
+    // 3. INTERATTIVITÀ (Tabs & Toggle)
+    // ===============================================
+
+    function switchView(target) {
+        // Aggiorna bottoni
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        document.querySelector(`.nav-btn[data-target="${target}"]`).classList.add('active');
+
+        // Aggiorna vista
+        document.querySelectorAll('.discipline-view').forEach(v => v.classList.remove('active'));
+        document.getElementById(target + '-view').classList.add('active');
+    }
+
+    function toggleCat(header) {
+        const body = header.nextElementSibling;
+        const icon = header.querySelector('.fa-chevron-down');
         
-        // Se la ricerca è vuota, resetta display
-        if(!query) {
-            document.querySelectorAll('.category-block').forEach(b => b.style.display = 'block');
-            return;
+        if (body.style.display === 'none') {
+            body.style.display = 'block';
+            icon.style.transform = 'rotate(180deg)';
+        } else {
+            body.style.display = 'none';
+            icon.style.transform = 'rotate(0deg)';
         }
+    }
 
-        document.querySelectorAll('.category-block').forEach(block => {
-            const text = block.innerText.toLowerCase();
-            if(text.includes(query)) {
-                block.style.display = 'block';
-                // Apri accordion se trovato
-                block.querySelector('.cat-body').style.display = 'block';
+    function filterSystem() {
+        const term = document.getElementById('searchInput').value.toLowerCase();
+        
+        document.querySelectorAll('.cat-card').forEach(card => {
+            const text = card.innerText.toLowerCase();
+            if(text.includes(term)) {
+                card.style.display = 'block';
             } else {
-                block.style.display = 'none';
+                card.style.display = 'none';
             }
         });
     }
 
-    // Avvio Iniziale
-    render(tournamentData);
+    // START
+    window.onload = initSystem;
 
 </script>
 
