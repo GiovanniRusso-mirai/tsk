@@ -11,9 +11,9 @@
         :root {
             --bg-color: #f4f7f6;
             --card-bg: #ffffff;
-            --primary-kick: #2980b9; /* Blu Kick */
-            --primary-lotta: #8e44ad; /* Viola Lotta */
-            --primary-kumite: #c0392b; /* Rosso Kumite */
+            --primary-kick: #2980b9;
+            --primary-lotta: #8e44ad;
+            --primary-kumite: #c0392b;
             --text-dark: #2c3e50;
             --text-light: #7f8c8d;
             --border-radius: 12px;
@@ -21,7 +21,6 @@
 
         body { font-family: 'Roboto', sans-serif; background: var(--bg-color); color: var(--text-dark); margin: 0; padding: 0; }
         
-        /* HEADER */
         .hero {
             background: linear-gradient(135deg, #2c3e50 0%, #000000 100%);
             color: white; padding: 30px 20px; text-align: center;
@@ -31,7 +30,6 @@
         .hero h1 { margin: 15px 0 5px; font-family: 'Montserrat', sans-serif; font-size: 1.8rem; letter-spacing: 1px; text-transform: uppercase; }
         .hero p { margin: 0; font-size: 0.9rem; opacity: 0.8; }
 
-        /* NAVIGATION */
         .nav-container { display: flex; justify-content: center; gap: 15px; margin: -25px auto 30px; position: relative; z-index: 10; padding: 0 15px; flex-wrap: wrap; }
         .nav-btn {
             border: none; padding: 12px 25px; border-radius: 30px; font-weight: 700; cursor: pointer;
@@ -43,12 +41,10 @@
         .nav-btn[data-target="lotta"].active { background: var(--primary-lotta); }
         .nav-btn[data-target="kumite"].active { background: var(--primary-kumite); }
 
-        /* MAIN CONTENT */
         .container { max-width: 1100px; margin: 0 auto; padding: 0 20px 50px; }
         .discipline-section { display: none; animation: fadeIn 0.5s ease-in-out; }
         .discipline-section.active { display: block; }
 
-        /* CATEGORY BLOCK */
         .cat-block { 
             background: var(--card-bg); border-radius: var(--border-radius); margin-bottom: 25px; 
             overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.05);
@@ -64,7 +60,6 @@
         .cat-body { padding: 20px; display: block; }
         .match-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
 
-        /* MATCH CARD */
         .match-card {
             background: white; border: 1px solid #eee; border-radius: 8px; position: relative;
             box-shadow: 0 2px 4px rgba(0,0,0,0.03); overflow: hidden;
@@ -83,7 +78,7 @@
         .competitor:first-of-type { border-bottom: 1px dashed #eee; }
         
         .comp-details { display: flex; flex-direction: column; width: 100%; }
-        .comp-name { font-weight: 700; font-size: 0.95rem; color: #333; }
+        .comp-name { font-weight: 700; font-size: 0.95rem; color: #333; text-transform: uppercase; }
         .comp-meta { font-size: 0.75rem; color: #7f8c8d; margin-top: 2px; }
         .comp-gym { font-size: 0.7rem; color: #95a5a6; font-style: italic; margin-top: 2px; }
 
@@ -91,10 +86,9 @@
             position: absolute; top: 50%; left: -12px; transform: translateY(-50%);
             width: 24px; height: 24px; background: white; border: 2px solid #ddd; border-radius: 50%;
             display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: bold; color: #aaa;
-            z-index: 2; margin-top: 13px; /* offset header */
+            z-index: 2; margin-top: 13px;
         }
 
-        /* WINNER CARD */
         .winner-card {
             background: linear-gradient(135deg, #fff9c4 0%, #fff 100%);
             border: 2px solid #f1c40f; text-align: center; padding: 20px; border-radius: 8px;
@@ -102,8 +96,7 @@
         .win-icon { font-size: 2rem; color: #f1c40f; margin-bottom: 10px; display: block; }
         .win-label { font-size: 0.8rem; font-weight: 800; color: #f39c12; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* SEARCH */
-        .search-container { max-width: 600px; margin: 20px auto; position: relative; padding: 0 15px; }
+        .search-container { max-width: 600px; margin: 20px auto; padding: 0 15px; position: relative; }
         .search-input { width: 100%; padding: 12px 20px 12px 45px; border-radius: 25px; border: 2px solid #e0e0e0; font-size: 1rem; box-sizing: border-box; transition: 0.3s; }
         .search-input:focus { border-color: #2c3e50; outline: none; }
         .search-icon { position: absolute; left: 30px; top: 50%; transform: translateY(-50%); color: #aaa; }
@@ -138,153 +131,187 @@
 
 <script>
     // ===============================================
-    // 1. DATABASE ATLETI (Dati reali dai CSV)
+    // 1. DATABASE ATLETI
     // ===============================================
     const rawData = [
-{d:'kick', n:`MATTEO PESCE`, s:'M', w:75.0, a:15, g:`ASD BUSHIDO`},
-{d:'kick', n:`IVAN CASABURI`, s:'M', w:38.6, a:13, g:`TAI SHIN KAI`},
-{d:'kick', n:`ANTONIO TESSITORE`, s:'M', w:57.0, a:10, g:`TAI SHIN KAI`},
-{d:'kick', n:`MARIO BATTISTA`, s:'M', w:46.7, a:11, g:`TAI SHIN KAI`},
-{d:'kick', n:`MICHELE BORTONE`, s:'M', w:67.0, a:11, g:`TAI SHIN KAI`},
-{d:'kick', n:`GIUSEPPE SIENO`, s:'M', w:58.1, a:12, g:`TAI SHIN KAI`},
-{d:'kick', n:`SAMUELE CHIARIELLO`, s:'M', w:34.0, a:12, g:`TAI SHIN KAI`},
-{d:'kick', n:`FIORELLA CARBISIERO`, s:'F', w:60.0, a:13, g:`TAI SHIN KAI`},
-{d:'kick', n:`ALESSANDRA PETRILLO`, s:'F', w:57.0, a:13, g:`TAI SHIN KAI`},
-{d:'kick', n:`FABIO DI SANTO`, s:'M', w:42.0, a:11, g:`TAI SHIN KAI`},
-{d:'kick', n:`DOMENICO DI GIORGIO`, s:'M', w:81.0, a:14, g:`TAI SHIN KAI`},
-{d:'kick', n:`PASQUALE BELARDO`, s:'M', w:73.5, a:12, g:`TAI SHIN KAI`},
-{d:'kick', n:`LUCA D'AMBRA`, s:'M', w:42.0, a:13, g:`TAI SHIN KAI`},
-{d:'kick', n:`Alessandro graniglia`, s:'M', w:71.0, a:15, g:`SSD life`},
-{d:'kick', n:`Raoul Gianlavigna`, s:'M', w:70.0, a:15, g:`SSD life`},
-{d:'kick', n:`Christian Corrado`, s:'M', w:50.0, a:14, g:`SSD life`},
-{d:'kick', n:`Matteo Cozzolino`, s:'M', w:60.0, a:14, g:`SSD life`},
-{d:'kick', n:`Francesco cappetta`, s:'M', w:45.0, a:14, g:`SSD life`},
-{d:'kick', n:`Gabriel caccioppoli`, s:'M', w:63.0, a:14, g:`SSD life`},
-{d:'kick', n:`Raffaele borrelli`, s:'M', w:54.0, a:12, g:`SSD life`},
-{d:'kick', n:`Jasmine di marzo`, s:'F', w:89.0, a:12, g:`SSD life`},
-{d:'kick', n:`Vittoria martusciello`, s:'F', w:63.0, a:12, g:`SSD life`},
-{d:'kick', n:`Simone caturano`, s:'M', w:34.0, a:12, g:`SSD life`},
-{d:'kick', n:`Fabrizio minopoli`, s:'M', w:39.0, a:12, g:`SSD life`},
-{d:'kick', n:`Christian caturano`, s:'M', w:26.0, a:11, g:`SSD life`},
-{d:'kick', n:`Christian de Angelis`, s:'M', w:33.0, a:10, g:`SSD life`},
-{d:'kick', n:`Romeo Montella`, s:'M', w:28.0, a:10, g:`SSD life`},
-{d:'kick', n:`Gabriele improta`, s:'M', w:44.0, a:11, g:`SSD life`},
-{d:'kick', n:`Vincenzo ombra`, s:'M', w:44.0, a:10, g:`SSD life`},
-{d:'kick', n:`Alessandro tonelli`, s:'M', w:54.0, a:10, g:`SSD life`},
-{d:'kick', n:`Luigi del sole`, s:'M', w:27.0, a:9, g:`SSD life`},
-{d:'kick', n:`Mario ingenito`, s:'M', w:39.0, a:10, g:`SSD life`},
-{d:'kick', n:`Vincenzo di vicino`, s:'M', w:21.0, a:7, g:`SSD life`},
-{d:'kick', n:`SANTORO  MELYSSA`, s:'F', w:25.0, a:11, g:`ASD  CS BODY  ART`},
-{d:'kick', n:`VIETRI  ILARIA`, s:'F', w:26.0, a:11, g:`ASD  CS BODY  ART`},
-{d:'kick', n:`PLAITANO  LIDIA`, s:'F', w:45.0, a:10, g:`ASD  CS BODY  ART`},
-{d:'kick', n:`MAZZEO  LINDA`, s:'F', w:29.0, a:11, g:`ASD  CS BODY  ART`},
-{d:'kick', n:`NAPPI  ALESSANDRA`, s:'F', w:33.0, a:11, g:`ASD  CS BODY  ART`},
-{d:'kick', n:`CASABURI RAFFAELLA`, s:'F', w:68.0, a:13, g:`ASD  CS BODY  ART`},
-{d:'kick', n:`LANDI  MICHELA`, s:'F', w:48.0, a:14, g:`ASD  CS BODY  ART`},
-{d:'kick', n:`RICCO  MORGAN`, s:'M', w:63.0, a:10, g:`ASD  CS BODY  ART`},
-{d:'kick', n:`VITALE  PIETRO`, s:'M', w:40.0, a:11, g:`ASD  CS BODY  ART`},
-{d:'kick', n:`CASTELLUCCIO  GIUSEPPE`, s:'M', w:45.0, a:10, g:`ASD  CS BODY  ART`},
-{d:'kick', n:`CASABURI  ALFONSO`, s:'M', w:57.0, a:13, g:`ASD  CS BODY  ART`},
-{d:'kick', n:`ALFIERO  FRANCESCO`, s:'M', w:29.0, a:12, g:`ASD  CS BODY  ART`},
-{d:'kumite', n:`LEONARDO OLIVA`, s:'M', w:20.5, a:3, g:`ASD BUSHIDO`},
-{d:'kumite', n:`GIUSEPPE PASCARELLA`, s:'M', w:30.0, a:6, g:`TAI SHIN KAI`},
-{d:'kumite', n:`RAFFAELA FERRARA`, s:'F', w:28.0, a:7, g:`TAI SHIN KAI`},
-{d:'kumite', n:`GABRIEL FERRARA`, s:'M', w:21.0, a:6, g:`TAI SHIN KAI`},
-{d:'kumite', n:`ANTONIO FUSCO`, s:'M', w:21.0, a:6, g:`TAI SHIN KAI`},
-{d:'kumite', n:`VERONICA CASTALDO`, s:'F', w:36.0, a:8, g:`TAI SHIN KAI`},
-{d:'kumite', n:`MARIA BENCIVENGA`, s:'F', w:38.0, a:8, g:`TAI SHIN KAI`},
-{d:'kumite', n:`PIETRO FORTINO`, s:'M', w:47.0, a:9, g:`TAI SHIN KAI`},
-{d:'kumite', n:`ARTEM PEREHKREST`, s:'M', w:35.0, a:7, g:`TAI SHIN KAI`},
-{d:'kumite', n:`ANTONIO DI MURO`, s:'M', w:42.0, a:9, g:`TAI SHIN KAI`},
-{d:'kumite', n:`RAFFAELE DI MURO`, s:'M', w:22.0, a:6, g:`TAI SHIN KAI`},
-{d:'kumite', n:`VITO BORTONE`, s:'M', w:21.0, a:6, g:`TAI SHIN KAI`},
-{d:'kumite', n:`EDUARDO PEZZULLO`, s:'M', w:25.0, a:7, g:`TAI SHIN KAI`},
-{d:'kumite', n:`REBECCA MICILLO`, s:'F', w:32.0, a:8, g:`TAI SHIN KAI`},
-{d:'kumite', n:`SARA IOVINELLA`, s:'F', w:36.0, a:8, g:`TAI SHIN KAI`},
-{d:'kumite', n:`DOMENICO MOZZILLO`, s:'M', w:23.0, a:8, g:`TAI SHIN KAI`},
-{d:'kumite', n:`GIOIA BELARDO`, s:'F', w:30.0, a:10, g:`TAI SHIN KAI`},
-{d:'kumite', n:`MARIO BUONANNO`, s:'M', w:32.0, a:6, g:`TAI SHIN KAI`},
-{d:'kumite', n:`ROBERTO RUSSO`, s:'M', w:42.0, a:9, g:`TAI SHIN KAI`},
-{d:'kumite', n:`Matthias longobardi`, s:'M', w:31.0, a:7, g:`SSD life`},
-{d:'kumite', n:`Vincenzo chianese`, s:'M', w:22.0, a:6, g:`SSD life`},
-{d:'lotta', n:`ALESSANDRO PESCE`, s:'M', w:40.0, a:10, g:`ASD BUSHIDO`},
-{d:'lotta', n:`AARON CALCE`, s:'M', w:54.0, a:12, g:`ASD BUSHIDO`},
-{d:'lotta', n:`MATTEO MASI`, s:'M', w:46.0, a:11, g:`ASD BUSHIDO`},
-{d:'lotta', n:`GIOVANNI ROTONDO`, s:'M', w:45.0, a:9, g:`ASD BUSHIDO`},
-{d:'lotta', n:`VINCENZO STABILE`, s:'M', w:29.0, a:8, g:`ASD BUSHIDO`},
-{d:'lotta', n:`ANTONIA DI STASIO`, s:'F', w:54.7, a:10, g:`ASD BUSHIDO`},
-{d:'lotta', n:`MATTEO PESCE`, s:'M', w:75.0, a:15, g:`ASD BUSHIDO`},
-{d:'lotta', n:`ALESSIA DELLI COLLI`, s:'F', w:45.0, a:11, g:`ASD BUSHIDO`},
-{d:'lotta', n:`ASIA RESARCHI`, s:'F', w:37.0, a:12, g:`ASD BUSHIDO`},
-{d:'lotta', n:`SAMUELE D'AMORE`, s:'M', w:65.0, a:15, g:`ASD BUSHIDO`},
-{d:'lotta', n:`ANTONIO MARANDOLA`, s:'M', w:67.0, a:11, g:`ASD BUSHIDO`},
-{d:'lotta', n:`INSAFE KHADRA`, s:'F', w:39.0, a:11, g:`TAI SHIN KAI`},
-{d:'lotta', n:`RITYA HASSANI`, s:'F', w:29.8, a:8, g:`TAI SHIN KAI`},
-{d:'lotta', n:`ANTONIO LUONGO`, s:'M', w:55.0, a:11, g:`TAI SHIN KAI`},
-{d:'lotta', n:`ALESSANDRO RUGGIANO`, s:'M', w:39.7, a:10, g:`TAI SHIN KAI`},
-{d:'lotta', n:`IVAN CASABURI`, s:'M', w:38.6, a:13, g:`TAI SHIN KAI`},
-{d:'lotta', n:`ANTONIO TESSITORE`, s:'M', w:57.0, a:10, g:`TAI SHIN KAI`},
-{d:'lotta', n:`MARIO BATTISTA`, s:'M', w:46.7, a:11, g:`TAI SHIN KAI`},
-{d:'lotta', n:`MICHELE BORTONE`, s:'M', w:67.0, a:11, g:`TAI SHIN KAI`},
-{d:'lotta', n:`GIUSEPPE SIENO`, s:'M', w:58.1, a:12, g:`TAI SHIN KAI`},
-{d:'lotta', n:`SAMUELE CHIARIELLO`, s:'M', w:34.0, a:12, g:`TAI SHIN KAI`},
-{d:'lotta', n:`FIORELLA CARBISIERO`, s:'F', w:60.0, a:13, g:`TAI SHIN KAI`},
-{d:'lotta', n:`ALESSANDRA PETRILLO`, s:'F', w:57.0, a:13, g:`TAI SHIN KAI`},
-{d:'lotta', n:`FABIO DI SANTO`, s:'M', w:42.0, a:11, g:`TAI SHIN KAI`},
-{d:'lotta', n:`CIRO ARCIPRETE`, s:'M', w:61.0, a:14, g:`TAI SHIN KAI`},
-{d:'lotta', n:`PASQUALE BELARDO`, s:'M', w:73.5, a:12, g:`TAI SHIN KAI`},
-{d:'lotta', n:`NICOLA SIENO`, s:'M', w:49.0, a:11, g:`TAI SHIN KAI`},
-{d:'lotta', n:`HAROUN KHADRA`, s:'M', w:26.0, a:7, g:`TAI SHIN KAI`},
-{d:'lotta', n:`SALVATORE LUONGO`, s:'M', w:26.2, a:8, g:`TAI SHIN KAI`},
-{d:'lotta', n:`ALESSANDRO TESSITORE`, s:'M', w:40.0, a:8, g:`TAI SHIN KAI`},
-{d:'lotta', n:`CLAUDIA VITALE`, s:'F', w:27.0, a:8, g:`TAI SHIN KAI`},
-{d:'lotta', n:`RITAJ HASSANI`, s:'F', w:40.8, a:9, g:`TAI SHIN KAI`},
-{d:'lotta', n:`DIEGO RUGGIANO`, s:'M', w:28.7, a:8, g:`TAI SHIN KAI`},
-{d:'lotta', n:`NICHOLAS D'ANGELO`, s:'M', w:30.5, a:8, g:`TAI SHIN KAI`},
-{d:'lotta', n:`RAFFAELE PEZZELLA`, s:'M', w:43.0, a:8, g:`TAI SHIN KAI`},
-{d:'lotta', n:`SILVANA MUROLO`, s:'F', w:31.0, a:8, g:`TAI SHIN KAI`},
-{d:'lotta', n:`SALVATORE BELARDO`, s:'M', w:25.8, a:8, g:`TAI SHIN KAI`},
-{d:'lotta', n:`RAFFAELE CAPASSO`, s:'M', w:25.0, a:8, g:`TAI SHIN KAI`},
-{d:'lotta', n:`ANTONIO MERENDA`, s:'M', w:58.0, a:10, g:`TAI SHIN KAI`},
-{d:'lotta', n:`Alessandro graniglia`, s:'M', w:71.0, a:15, g:`SSD life`},
-{d:'lotta', n:`Raoul Gianlavigna`, s:'M', w:70.0, a:15, g:`SSD life`},
-{d:'lotta', n:`Christian Corrado`, s:'M', w:50.0, a:14, g:`SSD life`},
-{d:'lotta', n:`Matteo Cozzolino`, s:'M', w:60.0, a:14, g:`SSD life`},
-{d:'lotta', n:`Francesco cappetta`, s:'M', w:45.0, a:14, g:`SSD life`},
-{d:'lotta', n:`Gabriel caccioppoli`, s:'M', w:63.0, a:14, g:`SSD life`},
-{d:'lotta', n:`Raffaele borrelli`, s:'M', w:54.0, a:12, g:`SSD life`},
-{d:'lotta', n:`Jasmine di marzo`, s:'F', w:89.0, a:12, g:`SSD life`},
-{d:'lotta', n:`Vittoria martusciello`, s:'F', w:63.0, a:12, g:`SSD life`},
-{d:'lotta', n:`Simone caturano`, s:'M', w:34.0, a:12, g:`SSD life`},
-{d:'lotta', n:`Fabrizio minopoli`, s:'M', w:39.0, a:12, g:`SSD life`},
-{d:'lotta', n:`Christian caturano`, s:'M', w:26.0, a:11, g:`SSD life`},
-{d:'lotta', n:`Christian de Angelis`, s:'M', w:33.0, a:10, g:`SSD life`},
-{d:'lotta', n:`Romeo Montella`, s:'M', w:28.0, a:10, g:`SSD life`},
-{d:'lotta', n:`Gabriele improta`, s:'M', w:44.0, a:11, g:`SSD life`},
-{d:'lotta', n:`Vincenzo ombra`, s:'M', w:44.0, a:10, g:`SSD life`},
-{d:'lotta', n:`Alessandro tonelli`, s:'M', w:54.0, a:10, g:`SSD life`},
-{d:'lotta', n:`Luigi del sole`, s:'M', w:27.0, a:9, g:`SSD life`},
-{d:'lotta', n:`Mario ingenito`, s:'M', w:39.0, a:10, g:`SSD life`},
-{d:'lotta', n:`Vincenzo di vicino`, s:'M', w:21.0, a:7, g:`SSD life`},
-{d:'lotta', n:`Vincenzo chianese`, s:'M', w:22.0, a:6, g:`SSD life`},
-{d:'lotta', n:`Matthias longobardi`, s:'M', w:31.0, a:7, g:`SSD life`},
-{d:'lotta', n:`SANTORO  MELYSSA`, s:'F', w:25.0, a:11, g:`ASD  CS BODY  ART`},
-{d:'lotta', n:`VIETRI  ILARIA`, s:'F', w:26.0, a:11, g:`ASD  CS BODY  ART`},
-{d:'lotta', n:`PLAITANO  LIDIA`, s:'F', w:45.0, a:10, g:`ASD  CS BODY  ART`},
-{d:'lotta', n:`MAZZEO  LINDA`, s:'F', w:29.0, a:11, g:`ASD  CS BODY  ART`},
-{d:'lotta', n:`NAPPI  ALESSANDRA`, s:'F', w:33.0, a:11, g:`ASD  CS BODY  ART`},
-{d:'lotta', n:`CASABURI RAFFAELLA`, s:'F', w:68.0, a:13, g:`ASD  CS BODY  ART`},
-{d:'lotta', n:`LANDI  MICHELA`, s:'F', w:48.0, a:14, g:`ASD  CS BODY  ART`},
-{d:'lotta', n:`RICCO  MORGAN`, s:'M', w:63.0, a:10, g:`ASD  CS BODY  ART`},
-{d:'lotta', n:`VITALE  PIETRO`, s:'M', w:40.0, a:11, g:`ASD  CS BODY  ART`},
-{d:'lotta', n:`CASTELLUCCIO  GIUSEPPE`, s:'M', w:45.0, a:10, g:`ASD  CS BODY  ART`},
-{d:'lotta', n:`CASABURI  ALFONSO`, s:'M', w:57.0, a:13, g:`ASD  CS BODY  ART`},
-{d:'lotta', n:`ALFIERO  FRANCESCO`, s:'M', w:29.0, a:12, g:`ASD  CS BODY  ART`},
-{d:'lotta', n:`STAN  ROBERT`, s:'M', w:45.0, a:15, g:`ASD  CS BODY  ART`}
-];
+        // KICK JITSU
+        {d:'kick', n:`MATTEO PESCE`, s:'M', w:75.0, a:15, g:`ASD BUSHIDO`},
+        {d:'kick', n:`IVAN CASABURI`, s:'M', w:38.6, a:13, g:`TAI SHIN KAI`},
+        {d:'kick', n:`ANTONIO TESSITORE`, s:'M', w:57.0, a:10, g:`TAI SHIN KAI`},
+        {d:'kick', n:`MARIO BATTISTA`, s:'M', w:46.7, a:11, g:`TAI SHIN KAI`},
+        {d:'kick', n:`MICHELE BORTONE`, s:'M', w:67.0, a:11, g:`TAI SHIN KAI`},
+        {d:'kick', n:`GIUSEPPE SIENO`, s:'M', w:58.1, a:12, g:`TAI SHIN KAI`},
+        {d:'kick', n:`SAMUELE CHIARIELLO`, s:'M', w:34.0, a:12, g:`TAI SHIN KAI`},
+        {d:'kick', n:`FIORELLA CARBISIERO`, s:'F', w:60.0, a:13, g:`TAI SHIN KAI`},
+        {d:'kick', n:`ALESSANDRA PETRILLO`, s:'F', w:57.0, a:13, g:`TAI SHIN KAI`},
+        {d:'kick', n:`FABIO DI SANTO`, s:'M', w:42.0, a:11, g:`TAI SHIN KAI`},
+        {d:'kick', n:`DOMENICO DI GIORGIO`, s:'M', w:81.0, a:14, g:`TAI SHIN KAI`},
+        {d:'kick', n:`PASQUALE BELARDO`, s:'M', w:73.5, a:12, g:`TAI SHIN KAI`},
+        {d:'kick', n:`LUCA D'AMBRA`, s:'M', w:42.0, a:13, g:`TAI SHIN KAI`},
+        {d:'kick', n:`ALESSANDRO GRANIGLIA`, s:'M', w:71.0, a:15, g:`SSD LIFE`},
+        {d:'kick', n:`RAOUL GIANLAVIGNA`, s:'M', w:70.1, a:15, g:`SSD LIFE`},
+        {d:'kick', n:`CHRISTIAN CORRADO`, s:'M', w:50.0, a:14, g:`SSD LIFE`},
+        {d:'kick', n:`MATTEO COZZOLINO`, s:'M', w:60.0, a:14, g:`SSD LIFE`},
+        {d:'kick', n:`FRANCESCO CAPPETTA`, s:'M', w:45.0, a:14, g:`SSD LIFE`},
+        {d:'kick', n:`GABRIEL CACCIOPPOLI`, s:'M', w:63.0, a:14, g:`SSD LIFE`},
+        {d:'kick', n:`RAFFAELE BORRELLI`, s:'M', w:54.0, a:12, g:`SSD LIFE`},
+        {d:'kick', n:`JASMINE DI MARZO`, s:'F', w:89.0, a:12, g:`SSD LIFE`},
+        {d:'kick', n:`VITTORIA MARTUSCIELLO`, s:'F', w:63.0, a:12, g:`SSD LIFE`},
+        {d:'kick', n:`SIMONE CATURANO`, s:'M', w:34.0, a:12, g:`SSD LIFE`},
+        {d:'kick', n:`FABRIZIO MINOPOLI`, s:'M', w:39.0, a:12, g:`SSD LIFE`},
+        {d:'kick', n:`CHRISTIAN CATURANO`, s:'M', w:26.0, a:11, g:`SSD LIFE`},
+        {d:'kick', n:`CHRISTIAN DE ANGELIS`, s:'M', w:33.0, a:10, g:`SSD LIFE`},
+        {d:'kick', n:`ROMEO MONTELLA`, s:'M', w:28.0, a:10, g:`SSD LIFE`},
+        {d:'kick', n:`GABRIELE IMPROTA`, s:'M', w:44.0, a:11, g:`SSD LIFE`},
+        {d:'kick', n:`VINCENZO OMBRA`, s:'M', w:44.0, a:10, g:`SSD LIFE`},
+        {d:'kick', n:`ALESSANDRO TONELLI`, s:'M', w:54.0, a:10, g:`SSD LIFE`},
+        {d:'kick', n:`LUIGI DEL SOLE`, s:'M', w:27.0, a:9, g:`SSD LIFE`},
+        {d:'kick', n:`MARIO INGENITO`, s:'M', w:39.0, a:10, g:`SSD LIFE`},
+        {d:'kick', n:`VINCENZO DI VICINO`, s:'M', w:21.0, a:7, g:`SSD LIFE`},
+        {d:'kick', n:`SANTORO MELYSSA`, s:'F', w:25.0, a:11, g:`ASD CS BODY ART`},
+        {d:'kick', n:`VIETRI ILARIA`, s:'F', w:26.0, a:11, g:`ASD CS BODY ART`},
+        {d:'kick', n:`PLAITANO LIDIA`, s:'F', w:45.0, a:10, g:`ASD CS BODY ART`},
+        {d:'kick', n:`MAZZEO LINDA`, s:'F', w:29.0, a:11, g:`ASD CS BODY ART`},
+        {d:'kick', n:`NAPPI ALESSANDRA`, s:'F', w:33.0, a:11, g:`ASD CS BODY ART`},
+        {d:'kick', n:`CASABURI RAFFAELLA`, s:'F', w:68.0, a:13, g:`ASD CS BODY ART`},
+        {d:'kick', n:`LANDI MICHELA`, s:'F', w:48.0, a:14, g:`ASD CS BODY ART`},
+        {d:'kick', n:`RICCO MORGAN`, s:'M', w:63.0, a:10, g:`ASD CS BODY ART`},
+        {d:'kick', n:`VITALE PIETRO`, s:'M', w:40.0, a:11, g:`ASD CS BODY ART`},
+        {d:'kick', n:`CASTELLUCCIO GIUSEPPE`, s:'M', w:45.0, a:10, g:`ASD CS BODY ART`},
+        {d:'kick', n:`CASABURI ALFONSO`, s:'M', w:57.0, a:13, g:`ASD CS BODY ART`},
+        {d:'kick', n:`ALFIERO FRANCESCO`, s:'M', w:29.0, a:12, g:`ASD CS BODY ART`},
+
+        // KUMITE KIDS
+        {d:'kumite', n:`LEONARDO OLIVA`, s:'M', w:20.5, a:3, g:`ASD BUSHIDO`},
+        {d:'kumite', n:`GIUSEPPE PASCARELLA`, s:'M', w:30.0, a:6, g:`TAI SHIN KAI`},
+        {d:'kumite', n:`RAFFAELA FERRARA`, s:'F', w:28.0, a:7, g:`TAI SHIN KAI`},
+        {d:'kumite', n:`GABRIEL FERRARA`, s:'M', w:21.0, a:6, g:`TAI SHIN KAI`},
+        {d:'kumite', n:`ANTONIO FUSCO`, s:'M', w:21.0, a:6, g:`TAI SHIN KAI`},
+        {d:'kumite', n:`VERONICA CASTALDO`, s:'F', w:36.0, a:8, g:`TAI SHIN KAI`},
+        {d:'kumite', n:`MARIA BENCIVENGA`, s:'F', w:38.0, a:8, g:`TAI SHIN KAI`},
+        {d:'kumite', n:`PIETRO FORTINO`, s:'M', w:45.0, a:9, g:`TAI SHIN KAI`},
+        {d:'kumite', n:`ARTEM PEREHKREST`, s:'M', w:35.0, a:7, g:`TAI SHIN KAI`},
+        {d:'kumite', n:`ANTONIO DI MURO`, s:'M', w:42.0, a:9, g:`TAI SHIN KAI`},
+        {d:'kumite', n:`RAFFAELE DI MURO`, s:'M', w:22.0, a:6, g:`TAI SHIN KAI`},
+        {d:'kumite', n:`VITO BORTONE`, s:'M', w:21.0, a:6, g:`TAI SHIN KAI`},
+        {d:'kumite', n:`EDUARDO PEZZULLO`, s:'M', w:25.0, a:7, g:`TAI SHIN KAI`},
+        {d:'kumite', n:`REBECCA MICILLO`, s:'F', w:32.0, a:8, g:`TAI SHIN KAI`},
+        {d:'kumite', n:`SARA IOVINELLA`, s:'F', w:36.0, a:8, g:`TAI SHIN KAI`},
+        {d:'kumite', n:`DOMENICO MOZZILLO`, s:'M', w:23.0, a:8, g:`TAI SHIN KAI`},
+        {d:'kumite', n:`GIOIA BELARDO`, s:'F', w:30.0, a:10, g:`TAI SHIN KAI`},
+        {d:'kumite', n:`MARIO BUONANNO`, s:'M', w:32.0, a:6, g:`TAI SHIN KAI`},
+        {d:'kumite', n:`ROBERTO RUSSO`, s:'M', w:42.0, a:9, g:`TAI SHIN KAI`},
+        {d:'kumite', n:`MATTHIAS LONGOBARDI`, s:'M', w:31.0, a:7, g:`SSD LIFE`},
+        {d:'kumite', n:`VINCENZO CHIANESE`, s:'M', w:22.0, a:6, g:`SSD LIFE`},
+
+        // LOTTA A TERRA
+        {d:'lotta', n:`ALESSANDRO PESCE`, s:'M', w:40.0, a:10, g:`ASD BUSHIDO`},
+        {d:'lotta', n:`AARON CALCE`, s:'M', w:54.0, a:12, g:`ASD BUSHIDO`},
+        {d:'lotta', n:`MATTEO MASI`, s:'M', w:46.0, a:11, g:`ASD BUSHIDO`},
+        {d:'lotta', n:`GIOVANNI ROTONDO`, s:'M', w:45.0, a:9, g:`ASD BUSHIDO`},
+        {d:'lotta', n:`VINCENZO STABILE`, s:'M', w:29.0, a:8, g:`ASD BUSHIDO`},
+        {d:'lotta', n:`ANTONIA DI STASIO`, s:'F', w:54.7, a:10, g:`ASD BUSHIDO`},
+        {d:'lotta', n:`MATTEO PESCE`, s:'M', w:75.0, a:15, g:`ASD BUSHIDO`},
+        {d:'lotta', n:`ALESSIA DELLI COLLI`, s:'F', w:45.0, a:11, g:`ASD BUSHIDO`},
+        {d:'lotta', n:`ASIA RESARCHI`, s:'F', w:37.0, a:12, g:`ASD BUSHIDO`},
+        {d:'lotta', n:`ANTONIO MARANDOLA`, s:'M', w:67.0, a:11, g:`ASD BUSHIDO`},
+        // Samuele D'Amore rimosso come richiesto
+        {d:'lotta', n:`INSAFE KHADRA`, s:'F', w:39.0, a:11, g:`TAI SHIN KAI`},
+        {d:'lotta', n:`RITYA HASSANI`, s:'F', w:29.8, a:8, g:`TAI SHIN KAI`},
+        {d:'lotta', n:`ANTONIO LUONGO`, s:'M', w:55.0, a:11, g:`TAI SHIN KAI`},
+        {d:'lotta', n:`ALESSANDRO RUGGIANO`, s:'M', w:39.7, a:10, g:`TAI SHIN KAI`},
+        {d:'lotta', n:`IVAN CASABURI`, s:'M', w:38.6, a:13, g:`TAI SHIN KAI`},
+        {d:'lotta', n:`ANTONIO TESSITORE`, s:'M', w:57.0, a:10, g:`TAI SHIN KAI`},
+        {d:'lotta', n:`MARIO BATTISTA`, s:'M', w:46.7, a:11, g:`TAI SHIN KAI`},
+        {d:'lotta', n:`MICHELE BORTONE`, s:'M', w:67.0, a:11, g:`TAI SHIN KAI`},
+        {d:'lotta', n:`GIUSEPPE SIENO`, s:'M', w:58.1, a:12, g:`TAI SHIN KAI`},
+        {d:'lotta', n:`SAMUELE CHIARIELLO`, s:'M', w:34.0, a:12, g:`TAI SHIN KAI`},
+        {d:'lotta', n:`FIORELLA CARBISIERO`, s:'F', w:60.0, a:13, g:`TAI SHIN KAI`},
+        {d:'lotta', n:`ALESSANDRA PETRILLO`, s:'F', w:57.0, a:13, g:`TAI SHIN KAI`},
+        {d:'lotta', n:`FABIO DI SANTO`, s:'M', w:42.0, a:11, g:`TAI SHIN KAI`},
+        {d:'lotta', n:`CIRO ARCIPRETE`, s:'M', w:61.0, a:14, g:`TAI SHIN KAI`},
+        {d:'lotta', n:`PASQUALE BELARDO`, s:'M', w:73.5, a:12, g:`TAI SHIN KAI`},
+        {d:'lotta', n:`NICOLA SIENO`, s:'M', w:49.0, a:11, g:`TAI SHIN KAI`},
+        {d:'lotta', n:`HAROUN KHADRA`, s:'M', w:26.0, a:7, g:`TAI SHIN KAI`},
+        {d:'lotta', n:`SALVATORE LUONGO`, s:'M', w:26.2, a:8, g:`TAI SHIN KAI`},
+        {d:'lotta', n:`ALESSANDRO TESSITORE`, s:'M', w:40.0, a:8, g:`TAI SHIN KAI`},
+        {d:'lotta', n:`CLAUDIA VITALE`, s:'F', w:27.1, a:8, g:`TAI SHIN KAI`},
+        {d:'lotta', n:`RITAJ HASSANI`, s:'F', w:40.8, a:9, g:`TAI SHIN KAI`},
+        {d:'lotta', n:`DIEGO RUGGIANO`, s:'M', w:28.7, a:8, g:`TAI SHIN KAI`},
+        {d:'lotta', n:`NICHOLAS D'ANGELO`, s:'M', w:30.5, a:8, g:`TAI SHIN KAI`},
+        {d:'lotta', n:`RAFFAELE PEZZELLA`, s:'M', w:43.0, a:8, g:`TAI SHIN KAI`},
+        {d:'lotta', n:`SILVANA MUROLO`, s:'F', w:31.1, a:8, g:`TAI SHIN KAI`},
+        {d:'lotta', n:`SALVATORE BELARDO`, s:'M', w:25.8, a:8, g:`TAI SHIN KAI`},
+        {d:'lotta', n:`RAFFAELE CAPASSO`, s:'M', w:25.0, a:8, g:`TAI SHIN KAI`},
+        {d:'lotta', n:`ANTONIO MERENDA`, s:'M', w:58.0, a:10, g:`TAI SHIN KAI`},
+        {d:'lotta', n:`ALESSANDRO GRANIGLIA`, s:'M', w:71.0, a:15, g:`SSD LIFE`},
+        {d:'lotta', n:`RAOUL GIANLAVIGNA`, s:'M', w:70.1, a:15, g:`SSD LIFE`},
+        {d:'lotta', n:`CHRISTIAN CORRADO`, s:'M', w:50.0, a:14, g:`SSD LIFE`},
+        {d:'lotta', n:`MATTEO COZZOLINO`, s:'M', w:60.0, a:14, g:`SSD LIFE`},
+        {d:'lotta', n:`FRANCESCO CAPPETTA`, s:'M', w:45.0, a:14, g:`SSD LIFE`},
+        {d:'lotta', n:`GABRIEL CACCIOPPOLI`, s:'M', w:63.0, a:14, g:`SSD LIFE`},
+        {d:'lotta', n:`RAFFAELE BORRELLI`, s:'M', w:54.0, a:12, g:`SSD LIFE`},
+        {d:'lotta', n:`JASMINE DI MARZO`, s:'F', w:89.0, a:12, g:`SSD LIFE`},
+        {d:'lotta', n:`VITTORIA MARTUSCIELLO`, s:'F', w:63.0, a:12, g:`SSD LIFE`},
+        {d:'lotta', n:`SIMONE CATURANO`, s:'M', w:34.0, a:12, g:`SSD LIFE`},
+        {d:'lotta', n:`FABRIZIO MINOPOLI`, s:'M', w:39.0, a:12, g:`SSD LIFE`},
+        {d:'lotta', n:`CHRISTIAN CATURANO`, s:'M', w:26.0, a:11, g:`SSD LIFE`},
+        {d:'lotta', n:`CHRISTIAN DE ANGELIS`, s:'M', w:33.0, a:10, g:`SSD LIFE`},
+        {d:'lotta', n:`ROMEO MONTELLA`, s:'M', w:28.0, a:10, g:`SSD LIFE`},
+        {d:'lotta', n:`GABRIELE IMPROTA`, s:'M', w:44.0, a:11, g:`SSD LIFE`},
+        {d:'lotta', n:`VINCENZO OMBRA`, s:'M', w:44.0, a:10, g:`SSD LIFE`},
+        {d:'lotta', n:`ALESSANDRO TONELLI`, s:'M', w:54.0, a:10, g:`SSD LIFE`},
+        {d:'lotta', n:`LUIGI DEL SOLE`, s:'M', w:27.0, a:9, g:`SSD LIFE`},
+        {d:'lotta', n:`MARIO INGENITO`, s:'M', w:39.0, a:10, g:`SSD LIFE`},
+        {d:'lotta', n:`VINCENZO DI VICINO`, s:'M', w:21.0, a:7, g:`SSD LIFE`},
+        {d:'lotta', n:`VINCENZO CHIANESE`, s:'M', w:22.0, a:6, g:`SSD LIFE`},
+        {d:'lotta', n:`MATTHIAS LONGOBARDI`, s:'M', w:31.0, a:7, g:`SSD LIFE`},
+        {d:'lotta', n:`SANTORO MELYSSA`, s:'F', w:25.0, a:11, g:`ASD CS BODY ART`},
+        {d:'lotta', n:`VIETRI ILARIA`, s:'F', w:26.0, a:11, g:`ASD CS BODY ART`},
+        {d:'lotta', n:`PLAITANO LIDIA`, s:'F', w:45.0, a:10, g:`ASD CS BODY ART`},
+        {d:'lotta', n:`MAZZEO LINDA`, s:'F', w:29.0, a:11, g:`ASD CS BODY ART`},
+        {d:'lotta', n:`NAPPI ALESSANDRA`, s:'F', w:33.0, a:11, g:`ASD CS BODY ART`},
+        {d:'lotta', n:`CASABURI RAFFAELLA`, s:'F', w:68.0, a:13, g:`ASD CS BODY ART`},
+        {d:'lotta', n:`LANDI MICHELA`, s:'F', w:48.0, a:14, g:`ASD CS BODY ART`},
+        {d:'lotta', n:`RICCO MORGAN`, s:'M', w:63.0, a:10, g:`ASD CS BODY ART`},
+        {d:'lotta', n:`VITALE PIETRO`, s:'M', w:40.0, a:11, g:`ASD CS BODY ART`},
+        {d:'lotta', n:`CASTELLUCCIO GIUSEPPE`, s:'M', w:45.0, a:10, g:`ASD CS BODY ART`},
+        {d:'lotta', n:`CASABURI ALFONSO`, s:'M', w:57.0, a:13, g:`ASD CS BODY ART`},
+        {d:'lotta', n:`ALFIERO FRANCESCO`, s:'M', w:29.0, a:12, g:`ASD CS BODY ART`},
+        {d:'lotta', n:`STAN ROBERT`, s:'M', w:45.0, a:15, g:`ASD CS BODY ART`},
+        {d:'lotta', n:`SARA IOVINELLA`, s:'F', w:36.0, a:8, g:`TAI SHIN KAI`}
+    ];
 
     // ===========================================
-    // 2. LOGICA CATEGORIE (Da Regolamento)
+    // 2. MATCH FORZATI (OVERRIDE MANUALE)
+    // ===========================================
+    const manualMatches = {
+        'kick': {
+            'M (10-11) -45': [['MARIO BATTISTA', 'BYE']],
+            'M (14-15) -65': [['GABRIEL CACCIOPPOLI', 'MATTEO COZZOLINO']],
+            'M (14-15) +70': [['ALESSANDRO GRANIGLIA', 'MATTEO PESCE'], ['DOMENICO DI GIORGIO', 'RAOUL GIANLAVIGNA']]
+        },
+        'lotta': {
+            'F (8-9) -35': [['SILVANA MUROLO', 'BYE']],
+            'F (8-9) -30': [['RITYA HASSANI', 'CLAUDIA VITALE']],
+            'M (8-9) -27': [['RAFFAELE CAPASSO', 'SALVATORE BELARDO'], ['LUIGI DEL SOLE', 'SALVATORE LUONGO']],
+            'M (8-9) -31': [['NICHOLAS D\'ANGELO', 'VINCENZO STABILE'], ['DIEGO RUGGIANO', 'BYE']],
+            'M (10-11) -50': [['MATTEO MASI', 'NICOLA SIENO'], ['MARIO BATTISTA', 'BYE']],
+            'M (10-11) +55': [['ANTONIO TESSITORE', 'RICCO MORGAN'], ['ANTONIO MARANDOLA', 'MICHELE BORTONE'], ['ANTONIO MERENDA', 'BYE']],
+            'M (14-15) -65': [['CIRO ARCIPRETE', 'MATTEO COZZOLINO'], ['GABRIEL CACCIOPPOLI', 'BYE']], // BYE perché Samuele è stato rimosso
+            'M (14-15) +70': [['RAOUL GIANLAVIGNA', 'BYE'], ['ALESSANDRO GRANIGLIA', 'MATTEO PESCE']]
+        },
+        'kumite': {
+            'MIX (8-9) -45': [['ANTONIO DI MURO', 'ROBERTO RUSSO'], ['ARTEM PEREHKREST', 'PIETRO FORTINO']]
+        }
+    };
+
+    const hiddenCategories = [
+        'M (14-15) -60', 'M (14-15) -70', 'MIX (6-7) -37', 'MIX (8-9) -50'
+    ];
+
+    // ===========================================
+    // 3. LOGICA CATEGORIE
     // ===========================================
     function getCategory(a) {
         if (a.d === 'kick') return calcKickCat(a);
@@ -300,22 +327,18 @@
         else if(a.a <= 11) { ageG='10-11'; limits=[28,32,36,40,45,50]; }
         else if(a.a <= 13) { ageG='12-13'; limits=[30,35,40,45,50,55]; }
         else if(a.a <= 15) { ageG='14-15'; limits=[40,45,50,55,60,65,70]; }
-        else if(a.a <= 17) { ageG='16-17'; limits=[40,45,50,55,60,65,70]; } // Junior/Senior merged for safety
         else { ageG='18+'; limits=[50,55,60,65,70,75,80]; }
-
         return formatCat(a.s, ageG, a.w, limits);
     }
 
     function calcLottaCat(a) {
         let ageG, limits;
         if(a.a <= 7) { ageG='6-7'; limits=[20,24,28,32,37]; }
-        else if(a.a <= 9) { ageG='8-9'; limits=[23,27,31,35,40,45,50]; }
+        else if(a.a <= 9) { ageG='8-9'; limits=[23,27,30,31,35,40,45,50]; }
         else if(a.a <= 11) { ageG='10-11'; limits=[28,32,36,40,45,50,55]; }
         else if(a.a <= 13) { ageG='12-13'; limits=[30,35,40,45,50,55,60]; }
         else if(a.a <= 15) { ageG='14-15'; limits=[40,45,50,55,60,65,70]; }
-        else if(a.a <= 17) { ageG='16-17'; limits=[45,50,55,60,65,70,75]; }
         else { ageG='18-40'; limits=[57,63,69,74,79,84,89]; }
-
         return formatCat(a.s, ageG, a.w, limits);
     }
 
@@ -325,7 +348,6 @@
         else if(a.a <= 7) { ageG='6-7'; limits=[20,24,28,32,37]; }
         else if(a.a <= 9) { ageG='8-9'; limits=[23,27,31,35,40,45,50]; }
         else { ageG='10-11'; limits=[28,32,36,40,45,50]; }
-
         return formatCat('MIX', ageG, a.w, limits);
     }
 
@@ -338,47 +360,31 @@
     }
 
     // ===========================================
-    // 3. MATCHMAKING CORE (Evita Derby)
+    // 4. MOTORE DI GENERAZIONE
     // ===========================================
     function runMatchmaking(disc) {
         const container = document.getElementById(disc);
         container.innerHTML = '';
 
-        // 1. Group Athletes by Category
-        const pool = rawData.filter(a => a.d === disc).map(a => ({...a, cat: getCategory(a)}));
+        const fullDiscPool = rawData.filter(a => a.d === disc);
+        const categorizedPool = fullDiscPool.map(a => ({...a, cat: getCategory(a)}));
         const groups = {};
-        pool.forEach(a => {
+        categorizedPool.forEach(a => {
             if(!groups[a.cat]) groups[a.cat] = [];
             groups[a.cat].push(a);
         });
 
-        // 2. Sort Categories
         const sortedCats = Object.keys(groups).sort((a,b) => {
-            // Sort logic: Age -> Sex -> Weight
-            const ageA = parseInt(a.match(/\((\d+)/)[1]);
-            const ageB = parseInt(b.match(/\((\d+)/)[1]);
+            const ageA = parseInt(a.match(/\((\d+)/)?.[1] || 0);
+            const ageB = parseInt(b.match(/\((\d+)/)?.[1] || 0);
             if(ageA !== ageB) return ageA - ageB;
-            
-            // Weight parsing (numeric with +/-)
-            const getW = (str) => {
-                const part = str.split(') ')[1];
-                const val = parseInt(part.replace(/[-+]/, ''));
-                if (part.startsWith('+')) return val + 1000; // Push + weights to end
-                return val;
-            };
-            
-            const wA = getW(a);
-            const wB = getW(b);
-            if (wA !== wB) return wA - wB;
-            
             return a.localeCompare(b);
         });
 
-        // 3. Process Each Category
         sortedCats.forEach(cat => {
+            if (hiddenCategories.includes(cat)) return;
+
             const group = groups[cat];
-            
-            // Sort athletes by weight (lightest first)
             group.sort((a,b) => a.w - b.w);
 
             const section = document.createElement('div');
@@ -392,36 +398,33 @@
                 <div class="cat-body"><div class="match-grid">
             `;
 
-            // Pairing Algorithm
-            const queue = [...group]; // Copy array
-            
-            if (queue.length === 1) {
-                // Single Winner
-                html += renderWinner(queue[0]);
+            if (manualMatches[disc] && manualMatches[disc][cat]) {
+                manualMatches[disc][cat].forEach(pair => {
+                    const findAthlete = (name) => {
+                        return fullDiscPool.find(x => x.n.toUpperCase().trim() === name.toUpperCase().trim());
+                    };
+
+                    const at1 = findAthlete(pair[0]) || {n: pair[0], g: 'N/A'};
+                    const at2 = pair[1] === 'BYE' ? {n:'BYE', g:'Passa il turno'} : (findAthlete(pair[1]) || {n: pair[1], g: 'N/A'});
+                    
+                    html += renderMatch(at1, at2, (at1.g === at2.g && at1.g !== 'N/A' && at2.g !== 'Passa il turno'));
+                });
             } else {
-                while(queue.length > 0) {
-                    if (queue.length === 1) {
-                        // Bye (Dispari)
-                        html += renderMatch(queue.shift(), {n:'BYE', g:'Passa il turno', a:'', w:''}, false);
-                    } else {
-                        // P1 is the lightest available
-                        const p1 = queue.shift();
-                        
-                        // Look for non-gym opponent
-                        let p2Index = -1;
-                        for(let i=0; i<queue.length; i++) {
-                            if(queue[i].g !== p1.g) {
-                                p2Index = i;
-                                break;
-                            }
+                const queue = [...group];
+                if (queue.length === 1) {
+                    html += renderWinner(queue[0]);
+                } else {
+                    while(queue.length > 0) {
+                        if (queue.length === 1) {
+                            html += renderMatch(queue.shift(), {n:'BYE', g:'Passa il turno', a:'', w:''}, false);
+                        } else {
+                            const p1 = queue.shift();
+                            let p2Index = queue.findIndex(x => x.g !== p1.g);
+                            const isDerby = (p2Index === -1);
+                            if(isDerby) p2Index = 0;
+                            const p2 = queue.splice(p2Index, 1)[0];
+                            html += renderMatch(p1, p2, isDerby);
                         }
-
-                        // If no external opponent found, DERBY required
-                        const isDerby = (p2Index === -1);
-                        if(isDerby) p2Index = 0; // Take next available (closest weight)
-
-                        const p2 = queue.splice(p2Index, 1)[0];
-                        html += renderMatch(p1, p2, isDerby);
                     }
                 }
             }
@@ -440,7 +443,6 @@
                     ${isDerby ? '<span class="derby-tag">DERBY OBBLIGATO</span>' : ''}
                 </div>
                 <div class="vs-circle">VS</div>
-                
                 <div class="competitor">
                     <div class="comp-details">
                         <span class="comp-name">${p1.n}</span>
@@ -448,7 +450,6 @@
                         <div class="comp-gym">${p1.g}</div>
                     </div>
                 </div>
-                
                 <div class="competitor">
                     <div class="comp-details">
                         <span class="comp-name">${p2.n}</span>
@@ -472,31 +473,22 @@
         `;
     }
 
-    // ===========================================
-    // 4. UI LOGIC
-    // ===========================================
     function switchTab(disc) {
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
         document.querySelector(`.nav-btn[data-target="${disc}"]`).classList.add('active');
-        
         document.querySelectorAll('.discipline-section').forEach(s => s.classList.remove('active'));
         document.getElementById(disc).classList.add('active');
-        
         runMatchmaking(disc);
     }
 
     function filterContent() {
         const term = document.getElementById('searchInput').value.toLowerCase();
         document.querySelectorAll('.cat-block').forEach(block => {
-            const text = block.innerText.toLowerCase();
-            block.style.display = text.includes(term) ? 'block' : 'none';
+            block.style.display = block.innerText.toLowerCase().includes(term) ? 'block' : 'none';
         });
     }
 
-    // Avvio
-    switchTab('kick');
-
+    window.onload = () => switchTab('kick');
 </script>
-
 </body>
 </html>
