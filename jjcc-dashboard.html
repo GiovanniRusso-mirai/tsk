@@ -1,965 +1,249 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Ju Jitsu Champions Cup – Live Brackets</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
-    <style>
-        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-        :root{
-            --bg:#060608;
-            --surface:#0e0e14;
-            --surface2:#151520;
-            --surface3:#1c1c2a;
-            --border:rgba(255,255,255,.06);
-            --border2:rgba(255,255,255,.1);
-            --kick:#3b82f6;
-            --kick-glow:rgba(59,130,246,.1);
-            --lotta:#a855f7;
-            --lotta-glow:rgba(168,85,247,.1);
-            --kumite:#ef4444;
-            --kumite-glow:rgba(239,68,68,.1);
-            --gold:#d4a017;
-            --gold2:#f5c842;
-            --accent:#c9a227;
-            --text:#d4d4d8;
-            --text2:#52525b;
-            --white:#f4f4f5;
-            --radius:12px;
-            --current:var(--kick);
-            --current-glow:var(--kick-glow);
-            --current-rgb:59,130,246;
-        }
-        html{scroll-behavior:smooth}
-        body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
-
-        /* ========= HERO ========= */
-        .hero{
-            position:relative;padding:44px 20px 90px;text-align:center;overflow:hidden;
-            background:var(--bg);
-        }
-        .hero::before{
-            content:'';position:absolute;inset:0;
-            background:
-                radial-gradient(ellipse 60% 50% at 50% 0%, rgba(201,162,39,.07) 0%, transparent 70%),
-                radial-gradient(ellipse 80% 40% at 20% 100%, rgba(59,130,246,.04) 0%, transparent 60%),
-                radial-gradient(ellipse 80% 40% at 80% 100%, rgba(168,85,247,.04) 0%, transparent 60%);
-        }
-        .hero::after{
-            content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
-            background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:.3;
-        }
-        .hero-logo{
-            width:80px;height:80px;border-radius:50%;
-            border:2px solid rgba(201,162,39,.3);
-            box-shadow:0 0 40px rgba(201,162,39,.1);
-            position:relative;z-index:1;object-fit:cover;
-        }
-        .hero-title{
-            font-family:'Bebas Neue',sans-serif;font-size:clamp(1.8rem,7vw,3.4rem);
-            letter-spacing:5px;margin-top:18px;position:relative;z-index:1;
-            color:var(--white);line-height:1;
-        }
-        .hero-title span{
-            display:block;font-family:'Oswald',sans-serif;font-size:clamp(.7rem,2.5vw,1rem);
-            letter-spacing:8px;color:var(--accent);margin-top:6px;font-weight:500;
-        }
-        .hero-badge{
-            display:inline-flex;align-items:center;gap:6px;margin-top:16px;
-            font-size:.7rem;color:var(--gold2);background:rgba(201,162,39,.06);
-            padding:6px 16px;border-radius:20px;border:1px solid rgba(201,162,39,.12);
-            position:relative;z-index:1;letter-spacing:1px;text-transform:uppercase;
-        }
-        .live-dot{width:5px;height:5px;background:var(--gold2);border-radius:50%;animation:blink 1.5s infinite}
-        @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
-
-        /* ========= STATS ========= */
-        .stats-bar{
-            display:flex;justify-content:center;gap:1px;
-            margin:0 auto 0;position:relative;z-index:10;
-            max-width:360px;background:var(--border);border-radius:14px;overflow:hidden;
-            box-shadow:0 8px 32px rgba(0,0,0,.4);
-        }
-        .stat-item{
-            flex:1;background:var(--surface);padding:14px 8px;text-align:center;
-        }
-        .stat-item:first-child{border-radius:14px 0 0 14px}
-        .stat-item:last-child{border-radius:0 14px 14px 0}
-        .stat-num{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:var(--white);line-height:1}
-        .stat-lbl{font-size:.55rem;color:var(--text2);text-transform:uppercase;letter-spacing:1.5px;margin-top:3px}
-
-        /* ========= TABS ========= */
-        .tab-bar{
-            display:flex;gap:6px;padding:28px 16px 0;justify-content:center;flex-wrap:wrap;
-        }
-        .tab-btn{
-            border:none;background:var(--surface2);color:var(--text2);
-            padding:10px 18px;border-radius:10px;font-weight:600;font-size:.82rem;
-            cursor:pointer;transition:all .25s;display:flex;align-items:center;gap:7px;
-            border:1px solid transparent;font-family:'DM Sans',sans-serif;
-        }
-        .tab-btn:hover{background:var(--surface3);color:var(--text)}
-        .tab-btn.active{
-            color:var(--white);
-            border-color:rgba(var(--current-rgb),.3);
-            background:rgba(var(--current-rgb),.08);
-            box-shadow:0 0 20px rgba(var(--current-rgb),.06);
-        }
-        .tab-btn .cnt{
-            font-size:.6rem;background:rgba(255,255,255,.06);padding:2px 7px;border-radius:5px;font-family:'Bebas Neue',sans-serif;font-size:.75rem;letter-spacing:.5px;
-        }
-        .tab-btn.active .cnt{background:rgba(255,255,255,.1)}
-
-        /* ========= SEARCH ========= */
-        .search-wrap{
-            max-width:520px;margin:20px auto 0;padding:0 16px;position:relative;
-        }
-        .search-wrap i.fa-search{position:absolute;left:30px;top:50%;transform:translateY(-50%);color:var(--text2);font-size:.85rem}
-        .search-input{
-            width:100%;padding:12px 40px 12px 42px;background:var(--surface);
-            border:1px solid var(--border2);border-radius:11px;color:var(--white);
-            font-size:.9rem;font-family:'DM Sans',sans-serif;transition:.25s;
-        }
-        .search-input::placeholder{color:var(--text2);font-size:.85rem}
-        .search-input:focus{outline:none;border-color:rgba(var(--current-rgb),.4);box-shadow:0 0 0 3px rgba(var(--current-rgb),.08)}
-        .search-clear{
-            position:absolute;right:26px;top:50%;transform:translateY(-50%);
-            background:none;border:none;color:var(--text2);cursor:pointer;font-size:.9rem;display:none;
-        }
-        .search-clear.show{display:block}
-
-        /* ========= ATHLETE SEARCH RESULTS ========= */
-        .ath-results{max-width:520px;margin:8px auto 0;padding:0 16px}
-        .ath-card{
-            background:var(--surface);border:1px solid var(--border2);border-radius:10px;
-            padding:12px 14px;margin-bottom:6px;display:flex;align-items:center;gap:12px;
-            cursor:pointer;transition:.2s;
-        }
-        .ath-card:hover{border-color:rgba(var(--current-rgb),.3);background:rgba(var(--current-rgb),.04)}
-        .ath-card:active{transform:scale(.98)}
-        .ath-ini{
-            width:36px;height:36px;border-radius:8px;display:flex;align-items:center;
-            justify-content:center;font-weight:700;font-size:.8rem;color:var(--white);flex-shrink:0;
-        }
-        .ath-ini.kick-c{background:linear-gradient(135deg,#2563eb,#3b82f6)}
-        .ath-ini.lotta-c{background:linear-gradient(135deg,#7c3aed,#a855f7)}
-        .ath-ini.kumite-c{background:linear-gradient(135deg,#dc2626,#ef4444)}
-        .ath-body{flex:1;min-width:0}
-        .ath-body h4{font-size:.82rem;font-weight:700;color:var(--white);text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-        .ath-body p{font-size:.68rem;color:var(--text2);margin-top:1px}
-        .ath-tag{font-size:.55rem;padding:3px 7px;border-radius:5px;font-weight:600;white-space:nowrap}
-
-        /* ========= MAIN ========= */
-        .main{max-width:720px;margin:24px auto 60px;padding:0 16px}
-        .disc-section{display:none;animation:fadeUp .35s ease}
-        .disc-section.active{display:block}
-        @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-
-        /* ========= CATEGORY ========= */
-        .cat-block{margin-bottom:12px}
-        .cat-head{
-            padding:13px 16px;cursor:pointer;display:flex;justify-content:space-between;
-            align-items:center;background:var(--surface);border:1px solid var(--border);
-            border-radius:var(--radius);transition:.2s;user-select:none;
-        }
-        .cat-head:hover{background:var(--surface2)}
-        .cat-head.open{border-radius:var(--radius) var(--radius) 0 0;border-bottom-color:transparent}
-        .cat-head h3{
-            font-family:'Oswald',sans-serif;font-size:.95rem;font-weight:700;
-            letter-spacing:1px;color:var(--white);text-transform:uppercase;
-            display:flex;align-items:center;gap:8px;
-        }
-        .cat-cnt{
-            font-size:.65rem;font-family:'DM Sans',sans-serif;
-            color:rgba(var(--current-rgb),.8);background:rgba(var(--current-rgb),.08);
-            padding:2px 8px;border-radius:6px;font-weight:600;letter-spacing:0;
-        }
-        .cat-chevron{color:var(--text2);transition:transform .3s;font-size:.7rem}
-        .cat-head.open .cat-chevron{transform:rotate(180deg)}
-        .cat-body{
-            display:none;padding:10px;background:var(--surface);
-            border:1px solid var(--border);border-top:none;
-            border-radius:0 0 var(--radius) var(--radius);
-        }
-        .cat-body.open{display:block}
-
-        /* ========= MATCH GRID ========= */
-        .match-grid{display:grid;grid-template-columns:1fr;gap:8px}
-        @media(min-width:520px){.match-grid{grid-template-columns:repeat(2,1fr)}}
-
-        /* ========= MATCH CARD ========= */
-        .match-card{
-            background:var(--bg);border:1px solid var(--border);border-radius:10px;
-            overflow:hidden;transition:.2s;
-        }
-        .match-card:hover{border-color:var(--border2)}
-        .match-head{
-            padding:6px 12px;font-size:.6rem;font-weight:600;color:var(--text2);
-            border-bottom:1px solid var(--border);letter-spacing:1px;text-transform:uppercase;
-            display:flex;align-items:center;gap:6px;
-        }
-        .fighter{
-            padding:10px 14px;display:flex;align-items:center;gap:10px;
-            position:relative;transition:.15s;
-        }
-        .fighter+.fighter{border-top:1px solid var(--border)}
-        .fighter-color{
-            width:4px;height:28px;border-radius:2px;flex-shrink:0;
-        }
-        .fighter-color.red{background:linear-gradient(180deg,#ef4444,#b91c1c)}
-        .fighter-color.blue{background:linear-gradient(180deg,#3b82f6,#1d4ed8)}
-        .fighter-info{flex:1;min-width:0}
-        .fighter-name{
-            font-size:.85rem;font-weight:700;color:var(--white);text-transform:uppercase;
-            white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:.3px;
-        }
-        .fighter-gym{font-size:.65rem;color:var(--text2);margin-top:2px}
-        .fighter.bye .fighter-name{color:var(--text2);font-weight:500;font-style:italic;font-size:.8rem}
-        .fighter.bye .fighter-color{opacity:.2}
-
-        .vs-tag{
-            position:absolute;left:50%;top:0;transform:translate(-50%,-50%);
-            background:var(--surface3);border:1px solid var(--border2);border-radius:4px;
-            padding:1px 6px;font-size:.5rem;font-weight:700;color:var(--text2);z-index:2;
-            letter-spacing:1px;
-        }
-
-        /* ========= SOLO ATHLETE (ex vincitore a tavolino) ========= */
-        .solo-card{
-            background:var(--bg);border:1px solid var(--border);border-radius:10px;
-            padding:14px;display:flex;align-items:center;gap:12px;
-        }
-        .solo-icon{
-            width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;
-            background:rgba(var(--current-rgb),.08);color:rgba(var(--current-rgb),.6);font-size:.8rem;flex-shrink:0;
-        }
-        .solo-info .fighter-name{font-size:.85rem}
-        .solo-info .fighter-gym{font-size:.65rem;color:var(--text2);margin-top:2px}
-        .solo-label{font-size:.55rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;margin-top:2px}
-
-        /* ========= HIGHLIGHT ========= */
-        .highlight-match{border-color:var(--gold)!important;box-shadow:0 0 16px rgba(212,160,23,.1)}
-        .highlight-name{color:var(--gold2)!important}
-
-        /* ========= SCROLL TOP ========= */
-        .scroll-top{
-            position:fixed;bottom:20px;right:16px;width:40px;height:40px;border-radius:10px;
-            background:var(--surface2);border:1px solid var(--border2);color:var(--text2);
-            display:none;align-items:center;justify-content:center;cursor:pointer;z-index:100;
-            font-size:.85rem;transition:.2s;
-        }
-        .scroll-top.show{display:flex}
-
-        /* ========= EMPTY ========= */
-        .empty-state{text-align:center;padding:40px 20px;color:var(--text2)}
-        .empty-state i{font-size:1.5rem;margin-bottom:10px;display:block;opacity:.3}
-
-        /* ========= PAGES ========= */
-        .page-content{display:none}
-        .page-content.active-page{display:block}
-
-        /* ========= TOP NAV ========= */
-        .top-nav{
-            display:flex;justify-content:center;gap:4px;padding:0 16px;
-            margin-top:-50px;position:relative;z-index:12;margin-bottom:20px;
-        }
-        .top-nav a{
-            text-decoration:none;font-size:.7rem;font-weight:600;letter-spacing:1px;
-            text-transform:uppercase;padding:8px 18px;border-radius:8px;
-            transition:.25s;color:var(--text2);background:var(--surface);
-            border:1px solid var(--border);
-        }
-        .top-nav a:hover{color:var(--white);border-color:var(--border2)}
-        .top-nav a.active-nav{color:var(--gold2);border-color:rgba(201,162,39,.2);background:rgba(201,162,39,.06)}
-
-        /* ========= INFO SECTION ========= */
-        .info-section{
-            max-width:720px;margin:0 auto;padding:0 16px 60px;display:none;
-            animation:fadeUp .35s ease;
-        }
-        .info-section.active{display:block}
-
-        .info-hero{
-            text-align:center;padding:40px 0 30px;
-        }
-        .info-hero-icon{
-            font-size:2.4rem;margin-bottom:14px;display:block;
-            background:linear-gradient(135deg,var(--gold),var(--gold2));
-            -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-        }
-        .info-hero h2{
-            font-family:'Bebas Neue',sans-serif;font-size:clamp(1.6rem,5vw,2.4rem);
-            color:var(--white);letter-spacing:3px;line-height:1.1;
-        }
-        .info-hero p{
-            font-size:.85rem;color:var(--text2);margin-top:8px;max-width:500px;
-            margin-left:auto;margin-right:auto;line-height:1.6;
-        }
-
-        .info-card{
-            background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
-            margin-bottom:14px;overflow:hidden;
-        }
-        .info-card-head{
-            padding:16px 18px;cursor:pointer;display:flex;align-items:center;gap:12px;
-            user-select:none;transition:.2s;
-        }
-        .info-card-head:hover{background:var(--surface2)}
-        .info-card-head.open{border-bottom:1px solid var(--border)}
-        .info-card-icon{
-            width:36px;height:36px;border-radius:8px;display:flex;align-items:center;
-            justify-content:center;font-size:.9rem;flex-shrink:0;
-        }
-        .info-card-icon.gold{background:rgba(201,162,39,.08);color:var(--gold2)}
-        .info-card-icon.red{background:rgba(239,68,68,.08);color:#ef4444}
-        .info-card-icon.blue{background:rgba(59,130,246,.08);color:#3b82f6}
-        .info-card-icon.purple{background:rgba(168,85,247,.08);color:#a855f7}
-        .info-card-icon.green{background:rgba(34,197,94,.08);color:#22c55e}
-        .info-card-title{flex:1}
-        .info-card-title h3{
-            font-family:'Oswald',sans-serif;font-size:.9rem;font-weight:700;
-            color:var(--white);text-transform:uppercase;letter-spacing:.5px;
-        }
-        .info-card-title p{font-size:.65rem;color:var(--text2);margin-top:1px}
-        .info-chevron{color:var(--text2);font-size:.7rem;transition:transform .3s}
-        .info-card-head.open .info-chevron{transform:rotate(180deg)}
-        .info-card-body{display:none;padding:18px 20px}
-        .info-card-body.open{display:block}
-        .info-card-body p{
-            font-size:.82rem;color:var(--text);line-height:1.7;margin-bottom:12px;
-        }
-        .info-card-body p:last-child{margin-bottom:0}
-        .info-card-body strong{color:var(--white)}
-        .info-card-body .info-highlight{
-            color:var(--gold2);font-weight:600;
-        }
-
-        .rule-item{
-            display:flex;gap:12px;padding:10px 0;
-            border-bottom:1px solid var(--border);
-        }
-        .rule-item:last-child{border-bottom:none}
-        .rule-num{
-            width:24px;height:24px;border-radius:6px;display:flex;align-items:center;
-            justify-content:center;font-size:.6rem;font-weight:700;flex-shrink:0;
-            background:var(--surface2);color:var(--text2);font-family:'Bebas Neue',sans-serif;
-            font-size:.8rem;
-        }
-        .rule-text{font-size:.8rem;color:var(--text);line-height:1.6}
-        .rule-text strong{color:var(--white)}
-
-        /* ========= FOOTER ========= */
-        .footer{
-            text-align:center;padding:32px 16px 44px;font-size:.65rem;color:var(--text2);
-            border-top:1px solid var(--border);max-width:720px;margin:0 auto;
-            letter-spacing:.5px;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JJCC — Stampa Brackets</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#1a1a2e;color:#eee;padding:20px}
+.screen-ui{text-align:center;padding:24px 12px 12px}
+.screen-ui h1{font-size:1.6rem;font-weight:800;letter-spacing:2px;color:#f5c842}
+.screen-ui p{color:#777;font-size:.8rem;margin:6px 0 16px}
+.btns{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;margin-bottom:20px}
+.btn{padding:8px 18px;border-radius:6px;cursor:pointer;font-weight:700;font-size:.78rem;border:1px solid #444;background:#222;color:#aaa;font-family:inherit;transition:.15s}
+.btn:hover{border-color:#888;color:#fff}
+.btn.on{border-color:#3b82f6;color:#3b82f6;background:rgba(59,130,246,.12)}
+.btn.go{background:#f5c842;color:#111;border-color:#f5c842}
+.btn.go:hover{background:#ffd866}
+.a4{width:210mm;background:#fff;color:#000;margin:12px auto;padding:10mm 12mm 14mm;position:relative;page-break-after:always;box-shadow:0 4px 30px rgba(0,0,0,.6)}
+.a4:last-child{page-break-after:auto}
+.ph{display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #222;padding-bottom:6px;margin-bottom:10px}
+.ph h2{font-size:.95rem;font-weight:800;letter-spacing:2px;text-transform:uppercase}
+.tag{font-size:.6rem;font-weight:800;padding:2px 8px;border-radius:3px;color:#fff;text-transform:uppercase;letter-spacing:.5px}
+.tag-kick{background:#2563eb}.tag-lotta{background:#7c3aed}.tag-kumite{background:#dc2626}
+.cb{margin-bottom:12px;padding-bottom:10px;border-bottom:1px dashed #ccc}
+.cb:last-child{border-bottom:none;margin-bottom:0}
+.cl{font-size:.78rem;font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.cl .n{font-size:.55rem;font-weight:600;color:#888;background:#f0f0f0;padding:1px 6px;border-radius:3px}
+.pf{position:absolute;bottom:8mm;left:12mm;right:12mm;display:flex;justify-content:space-between;font-size:.45rem;color:#aaa;border-top:1px solid #eee;padding-top:3px}
+@media print{
+    body{background:#fff;padding:0}
+    .screen-ui,.btns{display:none!important}
+    .a4{box-shadow:none;margin:0;padding:8mm 10mm 12mm}
+    @page{size:A4 portrait;margin:0}
+}
+</style>
 </head>
 <body>
-
-<header class="hero">
-    <img class="hero-logo" src="https://giovannirusso-mirai.github.io/tsk/299940804_510546830876553_8892043649465700842_n.png" alt="Logo">
-    <div class="hero-title">
-        JU JITSU<br>CHAMPIONS CUP
-        <span>Brackets Ufficiali</span>
-    </div>
-    <div class="hero-badge"><span class="live-dot"></span> Torneo Live</div>
-</header>
-
-<div class="top-nav">
-    <a href="#" class="active-nav" onclick="showPage('brackets');return false"><i class="fas fa-trophy"></i> Brackets</a>
-    <a href="#" onclick="showPage('info');return false"><i class="fas fa-scroll"></i> Info & Regolamento</a>
+<div class="screen-ui">
+    <h1>🖨️ STAMPA BRACKETS</h1>
+    <p>Ogni foglio A4 contiene più categorie. Clicca Stampa o Ctrl+P.</p>
 </div>
-
-<div id="page-brackets" class="page-content active-page">
-<div class="stats-bar" id="statsBar"></div>
-
-<div class="tab-bar" id="tabBar">
-    <button class="tab-btn active" data-disc="kick" onclick="switchDisc('kick')">
-        <i class="fas fa-bolt"></i> Kick Jitsu <span class="cnt" id="cnt-kick"></span>
-    </button>
-    <button class="tab-btn" data-disc="lotta" onclick="switchDisc('lotta')">
-        <i class="fas fa-hand-rock"></i> Lotta a Terra <span class="cnt" id="cnt-lotta"></span>
-    </button>
-    <button class="tab-btn" data-disc="kumite" onclick="switchDisc('kumite')">
-        <i class="fas fa-child-reaching"></i> Kumitè Kids <span class="cnt" id="cnt-kumite"></span>
-    </button>
+<div class="btns">
+    <button class="btn on" onclick="go('all',this)">Tutte</button>
+    <button class="btn" onclick="go('kick',this)">Kick Jitsu</button>
+    <button class="btn" onclick="go('lotta',this)">Lotta a Terra</button>
+    <button class="btn" onclick="go('kumite',this)">Kumitè Kids</button>
+    <button class="btn go" onclick="window.print()">🖨️ Stampa</button>
 </div>
-
-<div class="search-wrap">
-    <i class="fas fa-search"></i>
-    <input class="search-input" id="searchInput" type="text" placeholder="Cerca atleta o palestra..." autocomplete="off">
-    <button class="search-clear" id="searchClear" onclick="clearSearch()"><i class="fas fa-times"></i></button>
-</div>
-<div class="ath-results" id="athResults"></div>
-
-<div class="main">
-    <div id="kick" class="disc-section active"></div>
-    <div id="lotta" class="disc-section"></div>
-    <div id="kumite" class="disc-section"></div>
-</div>
-
-</div>
-</div><!-- end page-brackets -->
-
-<!-- INFO & REGOLAMENTO PAGE -->
-<div id="page-info" class="info-section">
-    
-    <div class="info-hero">
-        <span class="info-hero-icon">🥋</span>
-        <h2>Benvenuti alla<br>Ju Jitsu Champions Cup</h2>
-        <p>Una giornata dedicata alla crescita marziale, al rispetto e allo spirito del Ju-Jitsu. Vi chiediamo di vivere questo evento con la stessa disciplina che insegniamo ai nostri atleti.</p>
-    </div>
-
-    <!-- L'EVENTO -->
-    <div class="info-card">
-        <div class="info-card-head open" onclick="toggleInfo(this)">
-            <div class="info-card-icon gold"><i class="fas fa-torii-gate"></i></div>
-            <div class="info-card-title">
-                <h3>L'Evento</h3>
-                <p>Lo spirito della competizione</p>
-            </div>
-            <i class="fas fa-chevron-down info-chevron"></i>
-        </div>
-        <div class="info-card-body open">
-            <p>La <strong>Ju Jitsu Champions Cup</strong> nasce dalla volontà di offrire ai giovani praticanti un'occasione di confronto leale e formativo. Questo torneo non è semplicemente una gara: è un momento di <span class="info-highlight">crescita marziale</span>, dove ogni atleta ha l'opportunità di mettersi alla prova, imparare dal confronto e portare onore alla propria palestra.</p>
-            <p>Il torneo si articola in <strong>tre discipline</strong>: Kick Jitsu, Lotta a Terra e Kumitè Kids. Ogni incontro è un'occasione per dimostrare tecnica, coraggio e rispetto — i pilastri delle arti marziali.</p>
-            <p>Vogliamo che questa sia una <span class="info-highlight">bella giornata per tutti</span> — atleti, famiglie, maestri e appassionati. Una giornata in cui il tatami diventa uno spazio di crescita, e le tribune un luogo di incoraggiamento e fair play.</p>
-        </div>
-    </div>
-
-    <!-- REGOLE DI COMPORTAMENTO -->
-    <div class="info-card">
-        <div class="info-card-head open" onclick="toggleInfo(this)">
-            <div class="info-card-icon red"><i class="fas fa-shield-halved"></i></div>
-            <div class="info-card-title">
-                <h3>Regole di Comportamento</h3>
-                <p>Norme per il pubblico e gli accompagnatori</p>
-            </div>
-            <i class="fas fa-chevron-down info-chevron"></i>
-        </div>
-        <div class="info-card-body open">
-            <div class="rule-item">
-                <div class="rule-num">1</div>
-                <div class="rule-text"><strong>Rispettare gli atleti e gli arbitri.</strong> Ogni decisione arbitrale va accettata con serenità. Contestazioni, insulti o comportamenti antisportivi non saranno tollerati.</div>
-            </div>
-            <div class="rule-item">
-                <div class="rule-num">2</div>
-                <div class="rule-text"><strong>Incoraggiare sempre in modo positivo.</strong> Sostenete i vostri atleti con entusiasmo, ma nel rispetto degli avversari. Siamo tutti parte della stessa famiglia marziale.</div>
-            </div>
-            <div class="rule-item">
-                <div class="rule-num">3</div>
-                <div class="rule-text"><strong>Seguire le indicazioni dello staff.</strong> Il personale organizzativo è presente per garantire la sicurezza e il corretto svolgimento della manifestazione. Collaborate con loro.</div>
-            </div>
-            <div class="rule-item">
-                <div class="rule-num">4</div>
-                <div class="rule-text"><strong>Mantenere puliti gli spazi comuni.</strong> Il palazzetto è la nostra casa per questa giornata. Utilizzate i cestini, rispettate gli ambienti e lasciate ogni spazio come lo avete trovato.</div>
-            </div>
-            <div class="rule-item">
-                <div class="rule-num">5</div>
-                <div class="rule-text"><strong>Supervisione dei minori.</strong> I bambini devono essere sempre accompagnati da un adulto responsabile. Non lasciate minori incustoditi nelle aree del palazzetto.</div>
-            </div>
-            <div class="rule-item">
-                <div class="rule-num">6</div>
-                <div class="rule-text"><strong>Divieto di fumo e alcolici.</strong> All'interno del palazzetto è severamente vietato fumare e introdurre bevande alcoliche, in conformità con le normative vigenti.</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- AREA TATAMI -->
-    <div class="info-card">
-        <div class="info-card-head" onclick="toggleInfo(this)">
-            <div class="info-card-icon purple"><i class="fas fa-ban"></i></div>
-            <div class="info-card-title">
-                <h3>Accesso all'Area Tatami</h3>
-                <p>Zona riservata — Divieto assoluto di accesso</p>
-            </div>
-            <i class="fas fa-chevron-down info-chevron"></i>
-        </div>
-        <div class="info-card-body">
-            <p>L'<strong>area tatami è una zona sacra della competizione</strong> e l'accesso è rigorosamente riservato ad atleti, arbitri, maestri accreditati e staff organizzativo.</p>
-            <p><strong>Nessun accompagnatore, genitore o spettatore può accedere al tatami</strong>, nemmeno per scattare foto o realizzare video. Questo divieto esiste per motivi precisi e imprescindibili:</p>
-            <div class="rule-item">
-                <div class="rule-num"><i class="fas fa-shield" style="font-size:.5rem"></i></div>
-                <div class="rule-text"><strong>Sicurezza degli atleti.</strong> Le aree di gara devono restare libere da ostacoli. La presenza di persone non autorizzate può causare incidenti durante i combattimenti e mettere a rischio l'incolumità di tutti.</div>
-            </div>
-            <div class="rule-item">
-                <div class="rule-num"><i class="fas fa-gavel" style="font-size:.5rem"></i></div>
-                <div class="rule-text"><strong>Regolarità della gara.</strong> La presenza di estranei nell'area di combattimento può interferire con il lavoro degli arbitri e condizionare lo svolgimento degli incontri.</div>
-            </div>
-            <div class="rule-item">
-                <div class="rule-num"><i class="fas fa-camera" style="font-size:.5rem"></i></div>
-                <div class="rule-text"><strong>Foto e video.</strong> Potrete immortalare i momenti più belli comodamente dalle tribune. Vi chiediamo di non avvicinarvi al tatami con telefoni o fotocamere.</div>
-            </div>
-            <p style="margin-top:14px;padding:12px 14px;background:rgba(239,68,68,.04);border:1px solid rgba(239,68,68,.1);border-radius:8px;font-size:.78rem">
-                ⚠️ <strong>Chi non rispetterà questo divieto potrà essere allontanato dall'area di gara.</strong> Contiamo sulla vostra comprensione e collaborazione.
-            </p>
-        </div>
-    </div>
-
-    <!-- INFORMAZIONI PRATICHE -->
-    <div class="info-card">
-        <div class="info-card-head" onclick="toggleInfo(this)">
-            <div class="info-card-icon blue"><i class="fas fa-circle-info"></i></div>
-            <div class="info-card-title">
-                <h3>Informazioni Pratiche</h3>
-                <p>Tutto ciò che serve sapere</p>
-            </div>
-            <i class="fas fa-chevron-down info-chevron"></i>
-        </div>
-        <div class="info-card-body">
-            <div class="rule-item">
-                <div class="rule-num"><i class="fas fa-clock" style="font-size:.5rem"></i></div>
-                <div class="rule-text"><strong>Puntualità.</strong> Gli atleti devono presentarsi con largo anticipo rispetto ai propri incontri.</div>
-            </div>
-            <div class="rule-item">
-                <div class="rule-num"><i class="fas fa-kit-medical" style="font-size:.5rem"></i></div>
-                <div class="rule-text"><strong>Primo soccorso.</strong> Il servizio di primo soccorso sarà presente per tutta la durata dell'evento. In caso di necessità rivolgetevi allo staff.</div>
-            </div>
-            <div class="rule-item">
-                <div class="rule-num"><i class="fas fa-volume-high" style="font-size:.5rem"></i></div>
-                <div class="rule-text"><strong>Annunci.</strong> Prestate attenzione agli annunci audio dello speaker. Verranno comunicati aggiornamenti sugli incontri e informazioni importanti.</div>
-            </div>
-        </div>
-    </div>
-
-
-
-</div><!-- end page-info -->
-
-<button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">
-    <i class="fas fa-chevron-up"></i>
-</button>
-
-<div class="footer">
-    Ju Jitsu Champions Cup — by Tai Shin Do Kai Ryu
-</div>
+<div id="out"></div>
 
 <script>
-// =============================================
-// DATABASE (INTOCCABILE)
-// =============================================
-const rawData = [
-    {d:'kick',n:'MATTEO PESCE',s:'M',w:75.0,a:15,g:'ASD BUSHIDO'},
-    {d:'kick',n:'IVAN CASABURI',s:'M',w:38.6,a:13,g:'TAI SHIN KAI'},
-    {d:'kick',n:'ANTONIO TESSITORE',s:'M',w:57.0,a:10,g:'TAI SHIN KAI'},
-    {d:'kick',n:'MARIO BATTISTA',s:'M',w:46.7,a:11,g:'TAI SHIN KAI'},
-    {d:'kick',n:'MICHELE BORTONE',s:'M',w:67.0,a:11,g:'TAI SHIN KAI'},
-    {d:'kick',n:'GIUSEPPE SIENO',s:'M',w:58.1,a:12,g:'TAI SHIN KAI'},
-    {d:'kick',n:'SAMUELE CHIARIELLO',s:'M',w:34.0,a:12,g:'TAI SHIN KAI'},
-    {d:'kick',n:'FIORELLA CARBISIERO',s:'F',w:60.0,a:13,g:'TAI SHIN KAI'},
-    {d:'kick',n:'FABIO DI SANTO',s:'M',w:42.0,a:11,g:'TAI SHIN KAI'},
-    {d:'kick',n:'DOMENICO DI GIORGIO',s:'M',w:81.0,a:14,g:'TAI SHIN KAI'},
-    {d:'kick',n:'PASQUALE BELARDO',s:'M',w:73.5,a:12,g:'TAI SHIN KAI'},
-    {d:'kick',n:'LUCA D\'AMBRA',s:'M',w:42.0,a:13,g:'TAI SHIN KAI'},
-    {d:'kick',n:'ALESSANDRO GRANIGLIA',s:'M',w:71.0,a:15,g:'SSD LIFE'},
-    {d:'kick',n:'RAOUL GIANLAVIGNA',s:'M',w:70.1,a:15,g:'SSD LIFE'},
-    {d:'kick',n:'CHRISTIAN CORRADO',s:'M',w:50.0,a:14,g:'SSD LIFE'},
-    {d:'kick',n:'MATTEO COZZOLINO',s:'M',w:60.0,a:14,g:'SSD LIFE'},
-    {d:'kick',n:'FRANCESCO CAPPETTA',s:'M',w:45.0,a:14,g:'SSD LIFE'},
-    {d:'kick',n:'GABRIEL CACCIOPPOLI',s:'M',w:63.0,a:14,g:'SSD LIFE'},
-    {d:'kick',n:'RAFFAELE BORRELLI',s:'M',w:54.0,a:12,g:'SSD LIFE'},
-    {d:'kick',n:'JASMINE DI MARZO',s:'F',w:89.0,a:12,g:'SSD LIFE'},
-    {d:'kick',n:'VITTORIA MARTUSCIELLO',s:'F',w:63.0,a:12,g:'SSD LIFE'},
-    {d:'kick',n:'SIMONE CATURANO',s:'M',w:34.0,a:12,g:'SSD LIFE'},
-    {d:'kick',n:'FABRIZIO MINOPOLI',s:'M',w:39.0,a:12,g:'SSD LIFE'},
-    {d:'kick',n:'CHRISTIAN CATURANO',s:'M',w:26.0,a:11,g:'SSD LIFE'},
-    {d:'kick',n:'CHRISTIAN DE ANGELIS',s:'M',w:33.0,a:10,g:'SSD LIFE'},
-    {d:'kick',n:'ROMEO MONTELLA',s:'M',w:28.0,a:10,g:'SSD LIFE'},
-    {d:'kick',n:'GABRIELE IMPROTA',s:'M',w:44.0,a:11,g:'SSD LIFE'},
-    {d:'kick',n:'VINCENZO OMBRA',s:'M',w:44.0,a:10,g:'SSD LIFE'},
-    {d:'kick',n:'ALESSANDRO TONELLI',s:'M',w:54.0,a:10,g:'SSD LIFE'},
-    {d:'kick',n:'LUIGI DEL SOLE',s:'M',w:27.0,a:9,g:'SSD LIFE'},
-    {d:'kick',n:'MARIO INGENITO',s:'M',w:39.0,a:10,g:'SSD LIFE'},
-    {d:'kick',n:'VINCENZO DI VICINO',s:'M',w:21.0,a:7,g:'SSD LIFE'},
-    {d:'kick',n:'SANTORO MELYSSA',s:'F',w:25.0,a:11,g:'ASD CS BODY ART'},
-    {d:'kick',n:'VIETRI ILARIA',s:'F',w:26.0,a:11,g:'ASD CS BODY ART'},
-    {d:'kick',n:'PLAITANO LIDIA',s:'F',w:45.0,a:10,g:'ASD CS BODY ART'},
-    {d:'kick',n:'MAZZEO LINDA',s:'F',w:29.0,a:11,g:'ASD CS BODY ART'},
-    {d:'kick',n:'NAPPI ALESSANDRA',s:'F',w:33.0,a:11,g:'ASD CS BODY ART'},
-    {d:'kick',n:'CASABURI RAFFAELLA',s:'F',w:68.0,a:13,g:'ASD CS BODY ART'},
-    {d:'kick',n:'LANDI MICHELA',s:'F',w:48.0,a:14,g:'ASD CS BODY ART'},
-    {d:'kick',n:'RICCO MORGAN',s:'M',w:63.0,a:10,g:'ASD CS BODY ART'},
-    {d:'kick',n:'VITALE PIETRO',s:'M',w:40.0,a:11,g:'ASD CS BODY ART'},
-    {d:'kick',n:'CASTELLUCCIO GIUSEPPE',s:'M',w:45.0,a:10,g:'ASD CS BODY ART'},
-    {d:'kick',n:'CASABURI ALFONSO',s:'M',w:57.0,a:13,g:'ASD CS BODY ART'},
-    {d:'kick',n:'ALFIERO FRANCESCO',s:'M',w:29.0,a:12,g:'ASD CS BODY ART'},
-    {d:'kumite',n:'LEONARDO OLIVA',s:'M',w:20.5,a:3,g:'ASD BUSHIDO'},
-    {d:'kumite',n:'GIUSEPPE PASCARELLA',s:'M',w:30.0,a:6,g:'TAI SHIN KAI'},
-    {d:'kumite',n:'RAFFAELA FERRARA',s:'F',w:28.0,a:7,g:'TAI SHIN KAI'},
-    {d:'kumite',n:'GABRIEL FERRARA',s:'M',w:21.0,a:6,g:'TAI SHIN KAI'},
-    {d:'kumite',n:'ANTONIO FUSCO',s:'M',w:21.0,a:6,g:'TAI SHIN KAI'},
-    {d:'kumite',n:'VERONICA CASTALDO',s:'F',w:36.0,a:8,g:'TAI SHIN KAI'},
-    {d:'kumite',n:'MARIA BENCIVENGA',s:'F',w:38.0,a:8,g:'TAI SHIN KAI'},
-    {d:'kumite',n:'PIETRO FORTINO',s:'M',w:45.0,a:9,g:'TAI SHIN KAI'},
-    {d:'kumite',n:'ARTEM PEREHKREST',s:'M',w:35.0,a:7,g:'TAI SHIN KAI'},
-    {d:'kumite',n:'ANTONIO DI MURO',s:'M',w:42.0,a:9,g:'TAI SHIN KAI'},
-    {d:'kumite',n:'RAFFAELE DI MURO',s:'M',w:22.0,a:6,g:'TAI SHIN KAI'},
-    {d:'kumite',n:'VITO BORTONE',s:'M',w:21.0,a:6,g:'TAI SHIN KAI'},
-    {d:'kumite',n:'EDUARDO PEZZULLO',s:'M',w:25.0,a:7,g:'TAI SHIN KAI'},
-    {d:'kumite',n:'REBECCA MICILLO',s:'F',w:32.0,a:8,g:'TAI SHIN KAI'},
-    {d:'kumite',n:'SARA IOVINELLA',s:'F',w:36.0,a:8,g:'TAI SHIN KAI'},
-    {d:'kumite',n:'DOMENICO MOZZILLO',s:'M',w:23.0,a:8,g:'TAI SHIN KAI'},
-    {d:'kumite',n:'GIOIA BELARDO',s:'F',w:30.0,a:10,g:'TAI SHIN KAI'},
-    {d:'kumite',n:'MARIO BUONANNO',s:'M',w:32.0,a:6,g:'TAI SHIN KAI'},
-    {d:'kumite',n:'ROBERTO RUSSO',s:'M',w:42.0,a:9,g:'TAI SHIN KAI'},
-    {d:'kumite',n:'MATTHIAS LONGOBARDI',s:'M',w:31.0,a:7,g:'SSD LIFE'},
-    {d:'kumite',n:'VINCENZO CHIANESE',s:'M',w:22.0,a:6,g:'SSD LIFE'},
-    {d:'lotta',n:'ALESSANDRO PESCE',s:'M',w:40.0,a:10,g:'ASD BUSHIDO'},
-    {d:'lotta',n:'AARON CALCE',s:'M',w:54.0,a:12,g:'ASD BUSHIDO'},
-    {d:'lotta',n:'MATTEO MASI',s:'M',w:46.0,a:11,g:'ASD BUSHIDO'},
-    {d:'lotta',n:'GIOVANNI ROTONDO',s:'M',w:45.0,a:9,g:'ASD BUSHIDO'},
-    {d:'lotta',n:'VINCENZO STABILE',s:'M',w:29.0,a:8,g:'ASD BUSHIDO'},
-    {d:'lotta',n:'ANTONIA DI STASIO',s:'F',w:54.7,a:10,g:'ASD BUSHIDO'},
-    {d:'lotta',n:'MATTEO PESCE',s:'M',w:75.0,a:15,g:'ASD BUSHIDO'},
-    {d:'lotta',n:'ALESSIA DELLI COLLI',s:'F',w:45.0,a:11,g:'ASD BUSHIDO'},
-    {d:'lotta',n:'ASIA RESARCHI',s:'F',w:37.0,a:12,g:'ASD BUSHIDO'},
-    {d:'lotta',n:'ANTONIO MARANDOLA',s:'M',w:67.0,a:11,g:'ASD BUSHIDO'},
-    {d:'lotta',n:'INSAFE KHADRA',s:'F',w:39.0,a:11,g:'TAI SHIN KAI'},
-    {d:'lotta',n:'RITYA HASSANI',s:'F',w:29.8,a:8,g:'TAI SHIN KAI'},
-    {d:'lotta',n:'ANTONIO LUONGO',s:'M',w:55.0,a:11,g:'TAI SHIN KAI'},
-    {d:'lotta',n:'ALESSANDRO RUGGIANO',s:'M',w:39.7,a:10,g:'TAI SHIN KAI'},
-    {d:'lotta',n:'IVAN CASABURI',s:'M',w:38.6,a:13,g:'TAI SHIN KAI'},
-    {d:'lotta',n:'ANTONIO TESSITORE',s:'M',w:57.0,a:10,g:'TAI SHIN KAI'},
-    {d:'lotta',n:'MARIO BATTISTA',s:'M',w:46.7,a:11,g:'TAI SHIN KAI'},
-    {d:'lotta',n:'MICHELE BORTONE',s:'M',w:67.0,a:11,g:'TAI SHIN KAI'},
-    {d:'lotta',n:'GIUSEPPE SIENO',s:'M',w:58.1,a:12,g:'TAI SHIN KAI'},
-    {d:'lotta',n:'SAMUELE CHIARIELLO',s:'M',w:34.0,a:12,g:'TAI SHIN KAI'},
-    {d:'lotta',n:'FIORELLA CARBISIERO',s:'F',w:60.0,a:13,g:'TAI SHIN KAI'},
-    {d:'lotta',n:'FABIO DI SANTO',s:'M',w:42.0,a:11,g:'TAI SHIN KAI'},
-    {d:'lotta',n:'CIRO ARCIPRETE',s:'M',w:61.0,a:14,g:'TAI SHIN KAI'},
-    {d:'lotta',n:'PASQUALE BELARDO',s:'M',w:73.5,a:12,g:'TAI SHIN KAI'},
-    {d:'lotta',n:'NICOLA SIENO',s:'M',w:49.0,a:11,g:'TAI SHIN KAI'},
-    {d:'lotta',n:'HAROUN KHADRA',s:'M',w:26.0,a:7,g:'TAI SHIN KAI'},
-    {d:'lotta',n:'SALVATORE LUONGO',s:'M',w:26.2,a:8,g:'TAI SHIN KAI'},
-    {d:'lotta',n:'ALESSANDRO TESSITORE',s:'M',w:40.0,a:8,g:'TAI SHIN KAI'},
-    {d:'lotta',n:'CLAUDIA VITALE',s:'F',w:27.1,a:8,g:'TAI SHIN KAI'},
-    {d:'lotta',n:'RITAJ HASSANI',s:'F',w:40.8,a:9,g:'TAI SHIN KAI'},
-    {d:'lotta',n:'DIEGO RUGGIANO',s:'M',w:28.7,a:8,g:'TAI SHIN KAI'},
-    {d:'lotta',n:'NICHOLAS D\'ANGELO',s:'M',w:30.5,a:8,g:'TAI SHIN KAI'},
-    {d:'lotta',n:'RAFFAELE PEZZELLA',s:'M',w:43.0,a:8,g:'TAI SHIN KAI'},
-    {d:'lotta',n:'SILVANA MUROLO',s:'F',w:31.1,a:8,g:'TAI SHIN KAI'},
-    {d:'lotta',n:'SALVATORE BELARDO',s:'M',w:25.8,a:8,g:'TAI SHIN KAI'},
-    {d:'lotta',n:'RAFFAELE CAPASSO',s:'M',w:25.0,a:8,g:'TAI SHIN KAI'},
-    {d:'lotta',n:'ANTONIO MERENDA',s:'M',w:58.0,a:10,g:'TAI SHIN KAI'},
-    {d:'lotta',n:'ALESSANDRO GRANIGLIA',s:'M',w:71.0,a:15,g:'SSD LIFE'},
-    {d:'lotta',n:'RAOUL GIANLAVIGNA',s:'M',w:70.1,a:15,g:'SSD LIFE'},
-    {d:'lotta',n:'CHRISTIAN CORRADO',s:'M',w:50.0,a:14,g:'SSD LIFE'},
-    {d:'lotta',n:'MATTEO COZZOLINO',s:'M',w:60.0,a:14,g:'SSD LIFE'},
-    {d:'lotta',n:'FRANCESCO CAPPETTA',s:'M',w:45.0,a:14,g:'SSD LIFE'},
-    {d:'lotta',n:'GABRIEL CACCIOPPOLI',s:'M',w:63.0,a:14,g:'SSD LIFE'},
-    {d:'lotta',n:'RAFFAELE BORRELLI',s:'M',w:54.0,a:12,g:'SSD LIFE'},
-    {d:'lotta',n:'JASMINE DI MARZO',s:'F',w:89.0,a:12,g:'SSD LIFE'},
-    {d:'lotta',n:'VITTORIA MARTUSCIELLO',s:'F',w:63.0,a:12,g:'SSD LIFE'},
-    {d:'lotta',n:'SIMONE CATURANO',s:'M',w:34.0,a:12,g:'SSD LIFE'},
-    {d:'lotta',n:'FABRIZIO MINOPOLI',s:'M',w:39.0,a:12,g:'SSD LIFE'},
-    {d:'lotta',n:'CHRISTIAN CATURANO',s:'M',w:26.0,a:11,g:'SSD LIFE'},
-    {d:'lotta',n:'CHRISTIAN DE ANGELIS',s:'M',w:33.0,a:10,g:'SSD LIFE'},
-    {d:'lotta',n:'ROMEO MONTELLA',s:'M',w:28.0,a:10,g:'SSD LIFE'},
-    {d:'lotta',n:'GABRIELE IMPROTA',s:'M',w:44.0,a:11,g:'SSD LIFE'},
-    {d:'lotta',n:'VINCENZO OMBRA',s:'M',w:44.0,a:10,g:'SSD LIFE'},
-    {d:'lotta',n:'ALESSANDRO TONELLI',s:'M',w:54.0,a:10,g:'SSD LIFE'},
-    {d:'lotta',n:'LUIGI DEL SOLE',s:'M',w:27.0,a:9,g:'SSD LIFE'},
-    {d:'lotta',n:'MARIO INGENITO',s:'M',w:39.0,a:10,g:'SSD LIFE'},
-    {d:'lotta',n:'VINCENZO DI VICINO',s:'M',w:21.0,a:7,g:'SSD LIFE'},
-    {d:'lotta',n:'VINCENZO CHIANESE',s:'M',w:22.0,a:6,g:'SSD LIFE'},
-    {d:'lotta',n:'MATTHIAS LONGOBARDI',s:'M',w:31.0,a:7,g:'SSD LIFE'},
-    {d:'lotta',n:'SANTORO MELYSSA',s:'F',w:25.0,a:11,g:'ASD CS BODY ART'},
-    {d:'lotta',n:'VIETRI ILARIA',s:'F',w:26.0,a:11,g:'ASD CS BODY ART'},
-    {d:'lotta',n:'PLAITANO LIDIA',s:'F',w:45.0,a:10,g:'ASD CS BODY ART'},
-    {d:'lotta',n:'MAZZEO LINDA',s:'F',w:29.0,a:11,g:'ASD CS BODY ART'},
-    {d:'lotta',n:'NAPPI ALESSANDRA',s:'F',w:33.0,a:11,g:'ASD CS BODY ART'},
-    {d:'lotta',n:'CASABURI RAFFAELLA',s:'F',w:68.0,a:13,g:'ASD CS BODY ART'},
-    {d:'lotta',n:'LANDI MICHELA',s:'F',w:48.0,a:14,g:'ASD CS BODY ART'},
-    {d:'lotta',n:'RICCO MORGAN',s:'M',w:63.0,a:10,g:'ASD CS BODY ART'},
-    {d:'lotta',n:'VITALE PIETRO',s:'M',w:40.0,a:11,g:'ASD CS BODY ART'},
-    {d:'lotta',n:'CASTELLUCCIO GIUSEPPE',s:'M',w:45.0,a:10,g:'ASD CS BODY ART'},
-    {d:'lotta',n:'CASABURI ALFONSO',s:'M',w:57.0,a:13,g:'ASD CS BODY ART'},
-    {d:'lotta',n:'ALFIERO FRANCESCO',s:'M',w:29.0,a:12,g:'ASD CS BODY ART'},
-    {d:'lotta',n:'STAN ROBERT',s:'M',w:45.0,a:15,g:'ASD CS BODY ART'},
-    {d:'lotta',n:'SARA IOVINELLA',s:'F',w:36.0,a:8,g:'TAI SHIN KAI'},
-    {d:'lotta',n:'ANDREA RAINONE',s:'M',w:53.0,a:12,g:'TAI SHIN KAI'}
+const rawData=[
+{d:'kick',n:'MATTEO PESCE',s:'M',w:75.0,a:15,g:'ASD BUSHIDO'},{d:'kick',n:'IVAN CASABURI',s:'M',w:38.6,a:13,g:'TAI SHIN KAI'},{d:'kick',n:'ANTONIO TESSITORE',s:'M',w:57.0,a:10,g:'TAI SHIN KAI'},{d:'kick',n:'MARIO BATTISTA',s:'M',w:46.7,a:11,g:'TAI SHIN KAI'},{d:'kick',n:'MICHELE BORTONE',s:'M',w:67.0,a:11,g:'TAI SHIN KAI'},{d:'kick',n:'GIUSEPPE SIENO',s:'M',w:58.1,a:12,g:'TAI SHIN KAI'},{d:'kick',n:'SAMUELE CHIARIELLO',s:'M',w:34.0,a:12,g:'TAI SHIN KAI'},{d:'kick',n:'FIORELLA CARBISIERO',s:'F',w:60.0,a:13,g:'TAI SHIN KAI'},{d:'kick',n:'FABIO DI SANTO',s:'M',w:42.0,a:11,g:'TAI SHIN KAI'},{d:'kick',n:'DOMENICO DI GIORGIO',s:'M',w:81.0,a:14,g:'TAI SHIN KAI'},{d:'kick',n:'PASQUALE BELARDO',s:'M',w:73.5,a:12,g:'TAI SHIN KAI'},{d:'kick',n:'LUCA D\'AMBRA',s:'M',w:42.0,a:13,g:'TAI SHIN KAI'},{d:'kick',n:'ALESSANDRO GRANIGLIA',s:'M',w:71.0,a:15,g:'SSD LIFE'},{d:'kick',n:'RAOUL GIANLAVIGNA',s:'M',w:70.1,a:15,g:'SSD LIFE'},{d:'kick',n:'CHRISTIAN CORRADO',s:'M',w:50.0,a:14,g:'SSD LIFE'},{d:'kick',n:'MATTEO COZZOLINO',s:'M',w:60.0,a:14,g:'SSD LIFE'},{d:'kick',n:'FRANCESCO CAPPETTA',s:'M',w:45.0,a:14,g:'SSD LIFE'},{d:'kick',n:'GABRIEL CACCIOPPOLI',s:'M',w:63.0,a:14,g:'SSD LIFE'},{d:'kick',n:'RAFFAELE BORRELLI',s:'M',w:54.0,a:12,g:'SSD LIFE'},{d:'kick',n:'JASMINE DI MARZO',s:'F',w:89.0,a:12,g:'SSD LIFE'},{d:'kick',n:'VITTORIA MARTUSCIELLO',s:'F',w:63.0,a:12,g:'SSD LIFE'},{d:'kick',n:'SIMONE CATURANO',s:'M',w:34.0,a:12,g:'SSD LIFE'},{d:'kick',n:'FABRIZIO MINOPOLI',s:'M',w:39.0,a:12,g:'SSD LIFE'},{d:'kick',n:'CHRISTIAN CATURANO',s:'M',w:26.0,a:11,g:'SSD LIFE'},{d:'kick',n:'CHRISTIAN DE ANGELIS',s:'M',w:33.0,a:10,g:'SSD LIFE'},{d:'kick',n:'ROMEO MONTELLA',s:'M',w:28.0,a:10,g:'SSD LIFE'},{d:'kick',n:'GABRIELE IMPROTA',s:'M',w:44.0,a:11,g:'SSD LIFE'},{d:'kick',n:'VINCENZO OMBRA',s:'M',w:44.0,a:10,g:'SSD LIFE'},{d:'kick',n:'ALESSANDRO TONELLI',s:'M',w:54.0,a:10,g:'SSD LIFE'},{d:'kick',n:'LUIGI DEL SOLE',s:'M',w:27.0,a:9,g:'SSD LIFE'},{d:'kick',n:'MARIO INGENITO',s:'M',w:39.0,a:10,g:'SSD LIFE'},{d:'kick',n:'VINCENZO DI VICINO',s:'M',w:21.0,a:7,g:'SSD LIFE'},{d:'kick',n:'SANTORO MELYSSA',s:'F',w:25.0,a:11,g:'ASD CS BODY ART'},{d:'kick',n:'VIETRI ILARIA',s:'F',w:26.0,a:11,g:'ASD CS BODY ART'},{d:'kick',n:'PLAITANO LIDIA',s:'F',w:45.0,a:10,g:'ASD CS BODY ART'},{d:'kick',n:'MAZZEO LINDA',s:'F',w:29.0,a:11,g:'ASD CS BODY ART'},{d:'kick',n:'NAPPI ALESSANDRA',s:'F',w:33.0,a:11,g:'ASD CS BODY ART'},{d:'kick',n:'CASABURI RAFFAELLA',s:'F',w:68.0,a:13,g:'ASD CS BODY ART'},{d:'kick',n:'LANDI MICHELA',s:'F',w:48.0,a:14,g:'ASD CS BODY ART'},{d:'kick',n:'RICCO MORGAN',s:'M',w:63.0,a:10,g:'ASD CS BODY ART'},{d:'kick',n:'VITALE PIETRO',s:'M',w:40.0,a:11,g:'ASD CS BODY ART'},{d:'kick',n:'CASTELLUCCIO GIUSEPPE',s:'M',w:45.0,a:10,g:'ASD CS BODY ART'},{d:'kick',n:'CASABURI ALFONSO',s:'M',w:57.0,a:13,g:'ASD CS BODY ART'},{d:'kick',n:'ALFIERO FRANCESCO',s:'M',w:29.0,a:12,g:'ASD CS BODY ART'},
+{d:'kumite',n:'LEONARDO OLIVA',s:'M',w:20.5,a:3,g:'ASD BUSHIDO'},{d:'kumite',n:'GIUSEPPE PASCARELLA',s:'M',w:30.0,a:6,g:'TAI SHIN KAI'},{d:'kumite',n:'RAFFAELA FERRARA',s:'F',w:28.0,a:7,g:'TAI SHIN KAI'},{d:'kumite',n:'GABRIEL FERRARA',s:'M',w:21.0,a:6,g:'TAI SHIN KAI'},{d:'kumite',n:'ANTONIO FUSCO',s:'M',w:21.0,a:6,g:'TAI SHIN KAI'},{d:'kumite',n:'VERONICA CASTALDO',s:'F',w:36.0,a:8,g:'TAI SHIN KAI'},{d:'kumite',n:'MARIA BENCIVENGA',s:'F',w:38.0,a:8,g:'TAI SHIN KAI'},{d:'kumite',n:'PIETRO FORTINO',s:'M',w:45.0,a:9,g:'TAI SHIN KAI'},{d:'kumite',n:'ARTEM PEREHKREST',s:'M',w:35.0,a:7,g:'TAI SHIN KAI'},{d:'kumite',n:'ANTONIO DI MURO',s:'M',w:42.0,a:9,g:'TAI SHIN KAI'},{d:'kumite',n:'RAFFAELE DI MURO',s:'M',w:22.0,a:6,g:'TAI SHIN KAI'},{d:'kumite',n:'VITO BORTONE',s:'M',w:21.0,a:6,g:'TAI SHIN KAI'},{d:'kumite',n:'EDUARDO PEZZULLO',s:'M',w:25.0,a:7,g:'TAI SHIN KAI'},{d:'kumite',n:'REBECCA MICILLO',s:'F',w:32.0,a:8,g:'TAI SHIN KAI'},{d:'kumite',n:'SARA IOVINELLA',s:'F',w:36.0,a:8,g:'TAI SHIN KAI'},{d:'kumite',n:'DOMENICO MOZZILLO',s:'M',w:23.0,a:8,g:'TAI SHIN KAI'},{d:'kumite',n:'GIOIA BELARDO',s:'F',w:30.0,a:10,g:'TAI SHIN KAI'},{d:'kumite',n:'MARIO BUONANNO',s:'M',w:32.0,a:6,g:'TAI SHIN KAI'},{d:'kumite',n:'ROBERTO RUSSO',s:'M',w:42.0,a:9,g:'TAI SHIN KAI'},{d:'kumite',n:'MATTHIAS LONGOBARDI',s:'M',w:31.0,a:7,g:'SSD LIFE'},{d:'kumite',n:'VINCENZO CHIANESE',s:'M',w:22.0,a:6,g:'SSD LIFE'},
+{d:'lotta',n:'ALESSANDRO PESCE',s:'M',w:40.0,a:10,g:'ASD BUSHIDO'},{d:'lotta',n:'AARON CALCE',s:'M',w:54.0,a:12,g:'ASD BUSHIDO'},{d:'lotta',n:'MATTEO MASI',s:'M',w:46.0,a:11,g:'ASD BUSHIDO'},{d:'lotta',n:'GIOVANNI ROTONDO',s:'M',w:45.0,a:9,g:'ASD BUSHIDO'},{d:'lotta',n:'VINCENZO STABILE',s:'M',w:29.0,a:8,g:'ASD BUSHIDO'},{d:'lotta',n:'ANTONIA DI STASIO',s:'F',w:54.7,a:10,g:'ASD BUSHIDO'},{d:'lotta',n:'MATTEO PESCE',s:'M',w:75.0,a:15,g:'ASD BUSHIDO'},{d:'lotta',n:'ALESSIA DELLI COLLI',s:'F',w:45.0,a:11,g:'ASD BUSHIDO'},{d:'lotta',n:'ASIA RESARCHI',s:'F',w:37.0,a:12,g:'ASD BUSHIDO'},{d:'lotta',n:'ANTONIO MARANDOLA',s:'M',w:67.0,a:11,g:'ASD BUSHIDO'},{d:'lotta',n:'INSAFE KHADRA',s:'F',w:39.0,a:11,g:'TAI SHIN KAI'},{d:'lotta',n:'RITYA HASSANI',s:'F',w:29.8,a:8,g:'TAI SHIN KAI'},{d:'lotta',n:'ANTONIO LUONGO',s:'M',w:55.0,a:11,g:'TAI SHIN KAI'},{d:'lotta',n:'ALESSANDRO RUGGIANO',s:'M',w:39.7,a:10,g:'TAI SHIN KAI'},{d:'lotta',n:'IVAN CASABURI',s:'M',w:38.6,a:13,g:'TAI SHIN KAI'},{d:'lotta',n:'ANTONIO TESSITORE',s:'M',w:57.0,a:10,g:'TAI SHIN KAI'},{d:'lotta',n:'MARIO BATTISTA',s:'M',w:46.7,a:11,g:'TAI SHIN KAI'},{d:'lotta',n:'MICHELE BORTONE',s:'M',w:67.0,a:11,g:'TAI SHIN KAI'},{d:'lotta',n:'GIUSEPPE SIENO',s:'M',w:58.1,a:12,g:'TAI SHIN KAI'},{d:'lotta',n:'SAMUELE CHIARIELLO',s:'M',w:34.0,a:12,g:'TAI SHIN KAI'},{d:'lotta',n:'FIORELLA CARBISIERO',s:'F',w:60.0,a:13,g:'TAI SHIN KAI'},{d:'lotta',n:'FABIO DI SANTO',s:'M',w:42.0,a:11,g:'TAI SHIN KAI'},{d:'lotta',n:'CIRO ARCIPRETE',s:'M',w:61.0,a:14,g:'TAI SHIN KAI'},{d:'lotta',n:'PASQUALE BELARDO',s:'M',w:73.5,a:12,g:'TAI SHIN KAI'},{d:'lotta',n:'NICOLA SIENO',s:'M',w:49.0,a:11,g:'TAI SHIN KAI'},{d:'lotta',n:'HAROUN KHADRA',s:'M',w:26.0,a:7,g:'TAI SHIN KAI'},{d:'lotta',n:'SALVATORE LUONGO',s:'M',w:26.2,a:8,g:'TAI SHIN KAI'},{d:'lotta',n:'ALESSANDRO TESSITORE',s:'M',w:40.0,a:8,g:'TAI SHIN KAI'},{d:'lotta',n:'CLAUDIA VITALE',s:'F',w:27.1,a:8,g:'TAI SHIN KAI'},{d:'lotta',n:'RITAJ HASSANI',s:'F',w:40.8,a:9,g:'TAI SHIN KAI'},{d:'lotta',n:'DIEGO RUGGIANO',s:'M',w:28.7,a:8,g:'TAI SHIN KAI'},{d:'lotta',n:'NICHOLAS D\'ANGELO',s:'M',w:30.5,a:8,g:'TAI SHIN KAI'},{d:'lotta',n:'RAFFAELE PEZZELLA',s:'M',w:43.0,a:8,g:'TAI SHIN KAI'},{d:'lotta',n:'SILVANA MUROLO',s:'F',w:31.1,a:8,g:'TAI SHIN KAI'},{d:'lotta',n:'SALVATORE BELARDO',s:'M',w:25.8,a:8,g:'TAI SHIN KAI'},{d:'lotta',n:'RAFFAELE CAPASSO',s:'M',w:25.0,a:8,g:'TAI SHIN KAI'},{d:'lotta',n:'ANTONIO MERENDA',s:'M',w:58.0,a:10,g:'TAI SHIN KAI'},{d:'lotta',n:'ALESSANDRO GRANIGLIA',s:'M',w:71.0,a:15,g:'SSD LIFE'},{d:'lotta',n:'RAOUL GIANLAVIGNA',s:'M',w:70.1,a:15,g:'SSD LIFE'},{d:'lotta',n:'CHRISTIAN CORRADO',s:'M',w:50.0,a:14,g:'SSD LIFE'},{d:'lotta',n:'MATTEO COZZOLINO',s:'M',w:60.0,a:14,g:'SSD LIFE'},{d:'lotta',n:'FRANCESCO CAPPETTA',s:'M',w:45.0,a:14,g:'SSD LIFE'},{d:'lotta',n:'GABRIEL CACCIOPPOLI',s:'M',w:63.0,a:14,g:'SSD LIFE'},{d:'lotta',n:'RAFFAELE BORRELLI',s:'M',w:54.0,a:12,g:'SSD LIFE'},{d:'lotta',n:'JASMINE DI MARZO',s:'F',w:89.0,a:12,g:'SSD LIFE'},{d:'lotta',n:'VITTORIA MARTUSCIELLO',s:'F',w:63.0,a:12,g:'SSD LIFE'},{d:'lotta',n:'SIMONE CATURANO',s:'M',w:34.0,a:12,g:'SSD LIFE'},{d:'lotta',n:'FABRIZIO MINOPOLI',s:'M',w:39.0,a:12,g:'SSD LIFE'},{d:'lotta',n:'CHRISTIAN CATURANO',s:'M',w:26.0,a:11,g:'SSD LIFE'},{d:'lotta',n:'CHRISTIAN DE ANGELIS',s:'M',w:33.0,a:10,g:'SSD LIFE'},{d:'lotta',n:'ROMEO MONTELLA',s:'M',w:28.0,a:10,g:'SSD LIFE'},{d:'lotta',n:'GABRIELE IMPROTA',s:'M',w:44.0,a:11,g:'SSD LIFE'},{d:'lotta',n:'VINCENZO OMBRA',s:'M',w:44.0,a:10,g:'SSD LIFE'},{d:'lotta',n:'ALESSANDRO TONELLI',s:'M',w:54.0,a:10,g:'SSD LIFE'},{d:'lotta',n:'LUIGI DEL SOLE',s:'M',w:27.0,a:9,g:'SSD LIFE'},{d:'lotta',n:'MARIO INGENITO',s:'M',w:39.0,a:10,g:'SSD LIFE'},{d:'lotta',n:'VINCENZO DI VICINO',s:'M',w:21.0,a:7,g:'SSD LIFE'},{d:'lotta',n:'VINCENZO CHIANESE',s:'M',w:22.0,a:6,g:'SSD LIFE'},{d:'lotta',n:'MATTHIAS LONGOBARDI',s:'M',w:31.0,a:7,g:'SSD LIFE'},{d:'lotta',n:'SANTORO MELYSSA',s:'F',w:25.0,a:11,g:'ASD CS BODY ART'},{d:'lotta',n:'VIETRI ILARIA',s:'F',w:26.0,a:11,g:'ASD CS BODY ART'},{d:'lotta',n:'PLAITANO LIDIA',s:'F',w:45.0,a:10,g:'ASD CS BODY ART'},{d:'lotta',n:'MAZZEO LINDA',s:'F',w:29.0,a:11,g:'ASD CS BODY ART'},{d:'lotta',n:'NAPPI ALESSANDRA',s:'F',w:33.0,a:11,g:'ASD CS BODY ART'},{d:'lotta',n:'CASABURI RAFFAELLA',s:'F',w:68.0,a:13,g:'ASD CS BODY ART'},{d:'lotta',n:'LANDI MICHELA',s:'F',w:48.0,a:14,g:'ASD CS BODY ART'},{d:'lotta',n:'RICCO MORGAN',s:'M',w:63.0,a:10,g:'ASD CS BODY ART'},{d:'lotta',n:'VITALE PIETRO',s:'M',w:40.0,a:11,g:'ASD CS BODY ART'},{d:'lotta',n:'CASTELLUCCIO GIUSEPPE',s:'M',w:45.0,a:10,g:'ASD CS BODY ART'},{d:'lotta',n:'CASABURI ALFONSO',s:'M',w:57.0,a:13,g:'ASD CS BODY ART'},{d:'lotta',n:'ALFIERO FRANCESCO',s:'M',w:29.0,a:12,g:'ASD CS BODY ART'},{d:'lotta',n:'STAN ROBERT',s:'M',w:45.0,a:15,g:'ASD CS BODY ART'},{d:'lotta',n:'SARA IOVINELLA',s:'F',w:36.0,a:8,g:'TAI SHIN KAI'},{d:'lotta',n:'ANDREA RAINONE',s:'M',w:53.0,a:12,g:'TAI SHIN KAI'}
 ];
+const manualMatches={'kick':{'M (10-11) -45':[['MARIO BATTISTA','BYE']],'M (14-15) -65':[['GABRIEL CACCIOPPOLI','MATTEO COZZOLINO']],'M (14-15) +70':[['ALESSANDRO GRANIGLIA','MATTEO PESCE'],['DOMENICO DI GIORGIO','RAOUL GIANLAVIGNA']]},'lotta':{'F (8-9) -35':[['SILVANA MUROLO','BYE']],'F (8-9) -30':[['RITYA HASSANI','CLAUDIA VITALE']],'M (8-9) -27':[['RAFFAELE CAPASSO','SALVATORE BELARDO'],['LUIGI DEL SOLE','SALVATORE LUONGO']],'M (8-9) -31':[['NICHOLAS D\'ANGELO','VINCENZO STABILE'],['DIEGO RUGGIANO','BYE']],'M (10-11) -50':[['MATTEO MASI','NICOLA SIENO'],['MARIO BATTISTA','BYE']],'M (10-11) +55':[['ANTONIO TESSITORE','RICCO MORGAN'],['ANTONIO MARANDOLA','MICHELE BORTONE'],['ANTONIO MERENDA','BYE']],'M (14-15) -65':[['CIRO ARCIPRETE','MATTEO COZZOLINO'],['GABRIEL CACCIOPPOLI','BYE']],'M (14-15) +70':[['RAOUL GIANLAVIGNA','BYE'],['ALESSANDRO GRANIGLIA','MATTEO PESCE']]},'kumite':{'MIX (8-9) -45':[['ANTONIO DI MURO','ROBERTO RUSSO'],['ARTEM PEREHKREST','PIETRO FORTINO']]}};
+const hiddenCategories=['M (14-15) -60','M (14-15) -70','MIX (6-7) -37','MIX (8-9) -50','M (8-9) -30'];
+const discHidden={'kick':['M (10-11) -45']};
 
-// =============================================
-// MANUAL MATCHES (INTOCCABILE)
-// =============================================
-const manualMatches = {
-    'kick': {
-        'M (10-11) -45': [['MARIO BATTISTA','BYE']],
-        'M (14-15) -65': [['GABRIEL CACCIOPPOLI','MATTEO COZZOLINO']],
-        'M (14-15) +70': [['ALESSANDRO GRANIGLIA','MATTEO PESCE'],['DOMENICO DI GIORGIO','RAOUL GIANLAVIGNA']]
-    },
-    'lotta': {
-        'F (8-9) -35': [['SILVANA MUROLO','BYE']],
-        'F (8-9) -30': [['RITYA HASSANI','CLAUDIA VITALE']],
-        'M (8-9) -27': [['RAFFAELE CAPASSO','SALVATORE BELARDO'],['LUIGI DEL SOLE','SALVATORE LUONGO']],
-        'M (8-9) -31': [['NICHOLAS D\'ANGELO','VINCENZO STABILE'],['DIEGO RUGGIANO','BYE']],
-        'M (10-11) -50': [['MATTEO MASI','NICOLA SIENO'],['MARIO BATTISTA','BYE']],
-        'M (10-11) +55': [['ANTONIO TESSITORE','RICCO MORGAN'],['ANTONIO MARANDOLA','MICHELE BORTONE'],['ANTONIO MERENDA','BYE']],
-        'M (14-15) -65': [['CIRO ARCIPRETE','MATTEO COZZOLINO'],['GABRIEL CACCIOPPOLI','BYE']],
-        'M (14-15) +70': [['RAOUL GIANLAVIGNA','BYE'],['ALESSANDRO GRANIGLIA','MATTEO PESCE']]
-    },
-    'kumite': {
-        'MIX (8-9) -45': [['ANTONIO DI MURO','ROBERTO RUSSO'],['ARTEM PEREHKREST','PIETRO FORTINO']]
-    }
-};
+function getCategory(a){if(a.d==='kick')return ck(a);if(a.d==='lotta')return cl(a);return cm(a)}
+function ck(a){let g,l;if(a.a<=7){g='6-7';l=[20,24,28,32,37]}else if(a.a<=9){g='8-9';l=[23,27,31,35,40,45]}else if(a.a<=11){g='10-11';l=[28,32,36,40,45,50]}else if(a.a<=13){g='12-13';l=[30,35,40,45,50,55]}else if(a.a<=15){g='14-15';l=[40,45,50,55,60,65,70]}else{g='18+';l=[50,55,60,65,70,75,80]}return fc(a.s,g,a.w,l)}
+function cl(a){let g,l;if(a.a<=7){g='6-7';l=[20,24,28,32,37]}else if(a.a<=9){g='8-9';l=[23,27,30,31,35,40,45,50]}else if(a.a<=11){g='10-11';l=[28,32,36,40,45,50,55]}else if(a.a<=13){g='12-13';l=[30,35,40,45,50,55,60]}else if(a.a<=15){g='14-15';l=[40,45,50,55,60,65,70]}else{g='18-40';l=[57,63,69,74,79,84,89]}return fc(a.s,g,a.w,l)}
+function cm(a){let g,l;if(a.a<=5){g='3-5';l=[20]}else if(a.a<=7){g='6-7';l=[20,24,28,32,37]}else if(a.a<=9){g='8-9';l=[23,27,31,35,40,45,50]}else{g='10-11';l=[28,32,36,40,45,50]}return fc('MIX',g,a.w,l)}
+function fc(s,age,w,lim){let wc=`+${lim[lim.length-1]}`;for(let l of lim)if(w<=l){wc=`-${l}`;break}return`${s} (${age}) ${wc}`}
 
-const hiddenCategories = ['M (14-15) -60','M (14-15) -70','MIX (6-7) -37','MIX (8-9) -50'];
-
-// =============================================
-// CATEGORY LOGIC (INTOCCABILE)
-// =============================================
-function getCategory(a){
-    if(a.d==='kick')return calcKickCat(a);
-    if(a.d==='lotta')return calcLottaCat(a);
-    if(a.d==='kumite')return calcKumiteCat(a);
-    return 'UNKNOWN';
-}
-function calcKickCat(a){let g,l;if(a.a<=7){g='6-7';l=[20,24,28,32,37]}else if(a.a<=9){g='8-9';l=[23,27,31,35,40,45]}else if(a.a<=11){g='10-11';l=[28,32,36,40,45,50]}else if(a.a<=13){g='12-13';l=[30,35,40,45,50,55]}else if(a.a<=15){g='14-15';l=[40,45,50,55,60,65,70]}else{g='18+';l=[50,55,60,65,70,75,80]}return formatCat(a.s,g,a.w,l)}
-function calcLottaCat(a){let g,l;if(a.a<=7){g='6-7';l=[20,24,28,32,37]}else if(a.a<=9){g='8-9';l=[23,27,30,31,35,40,45,50]}else if(a.a<=11){g='10-11';l=[28,32,36,40,45,50,55]}else if(a.a<=13){g='12-13';l=[30,35,40,45,50,55,60]}else if(a.a<=15){g='14-15';l=[40,45,50,55,60,65,70]}else{g='18-40';l=[57,63,69,74,79,84,89]}return formatCat(a.s,g,a.w,l)}
-function calcKumiteCat(a){let g,l;if(a.a<=5){g='3-5';l=[20]}else if(a.a<=7){g='6-7';l=[20,24,28,32,37]}else if(a.a<=9){g='8-9';l=[23,27,31,35,40,45,50]}else{g='10-11';l=[28,32,36,40,45,50]}return formatCat('MIX',g,a.w,l)}
-function formatCat(s,age,w,limits){let wc=`+${limits[limits.length-1]}`;for(let l of limits){if(w<=l){wc=`-${l}`;break}}return `${s} (${age}) ${wc}`}
-
-// =============================================
-// MATCHMAKING (INTOCCABILE)
-// =============================================
-let currentDisc='kick';
-let allMatchData={};
-
-function buildMatches(disc){
+function buildAll(disc){
     const pool=rawData.filter(a=>a.d===disc);
-    const catPool=pool.map(a=>({...a,cat:getCategory(a)}));
-    const groups={};
-    catPool.forEach(a=>{if(!groups[a.cat])groups[a.cat]=[];groups[a.cat].push(a)});
-    const sortedCats=Object.keys(groups).sort((a,b)=>{
-        const aA=parseInt(a.match(/\((\d+)/)?.[1]||0),bA=parseInt(b.match(/\((\d+)/)?.[1]||0);
-        if(aA!==bA)return aA-bA;return a.localeCompare(b);
-    });
-    const result=[];
-    sortedCats.forEach(cat=>{
+    const cp=pool.map(a=>({...a,cat:getCategory(a)}));
+    const gr={};cp.forEach(a=>{if(!gr[a.cat])gr[a.cat]=[];gr[a.cat].push(a)});
+    const sorted=Object.keys(gr).sort((a,b)=>{const x=parseInt(a.match(/\((\d+)/)?.[1]||0),y=parseInt(b.match(/\((\d+)/)?.[1]||0);return x!==y?x-y:a.localeCompare(b)});
+    const res=[];
+    sorted.forEach(cat=>{
         if(hiddenCategories.includes(cat))return;
-        const group=[...groups[cat]].sort((a,b)=>a.w-b.w);
-        const matches=[];
+        if(discHidden[disc]&&discHidden[disc].includes(cat))return;
+        const g=[...gr[cat]].sort((a,b)=>a.w-b.w);const m=[];
         if(manualMatches[disc]&&manualMatches[disc][cat]){
-            manualMatches[disc][cat].forEach(pair=>{
-                const find=name=>pool.find(x=>x.n.toUpperCase().trim()===name.toUpperCase().trim());
-                const a1=find(pair[0])||{n:pair[0],g:'N/A'};
-                const a2=pair[1]==='BYE'?{n:'BYE',g:'Passa il turno'}:(find(pair[1])||{n:pair[1],g:'N/A'});
-                matches.push({a1,a2});
-            });
-        } else {
-            const queue=[...group];
-            if(queue.length===1){matches.push({solo:queue[0]})}
-            else{
-                while(queue.length>0){
-                    if(queue.length===1){matches.push({a1:queue.shift(),a2:{n:'BYE',g:'Passa il turno'}})}
-                    else{
-                        const p1=queue.shift();
-                        let p2i=queue.findIndex(x=>x.g!==p1.g);
-                        if(p2i===-1)p2i=0;
-                        const p2=queue.splice(p2i,1)[0];
-                        matches.push({a1:p1,a2:p2});
-                    }
-                }
-            }
-        }
-        result.push({cat,count:group.length,matches});
+            manualMatches[disc][cat].forEach(p=>{const f=name=>pool.find(x=>x.n.toUpperCase().trim()===name.toUpperCase().trim());const a1=f(p[0])||{n:p[0],g:''};const a2=p[1]==='BYE'?{n:'BYE',g:''}:(f(p[1])||{n:p[1],g:''});m.push({a1,a2})});
+        }else{const q=[...g];if(q.length===1)m.push({solo:q[0]});else while(q.length>0){if(q.length===1){m.push({a1:q.shift(),a2:{n:'BYE',g:''}});continue}const p1=q.shift();let i=q.findIndex(x=>x.g!==p1.g);if(i===-1)i=0;m.push({a1:p1,a2:q.splice(i,1)[0]})}}
+        res.push({cat,cnt:g.length,matches:m,disc});
     });
-    return result;
+    return res;
 }
 
-// =============================================
-// RENDER
-// =============================================
-function renderDisc(disc){
-    const container=document.getElementById(disc);
-    const data=buildMatches(disc);
-    allMatchData[disc]=data;
-    if(!data.length){container.innerHTML='<div class="empty-state"><i class="fas fa-ghost"></i><p>Nessuna categoria</p></div>';return}
-    let html='';
-    data.forEach((c,ci)=>{
-        const isOpen=ci<2;
-        html+=`<div class="cat-block" data-cat="${c.cat}">
-            <div class="cat-head${isOpen?' open':''}" onclick="toggleCat(this)">
-                <h3>${c.cat} <span class="cat-cnt">${c.count}</span></h3>
-                <i class="fas fa-chevron-down cat-chevron"></i>
-            </div>
-            <div class="cat-body${isOpen?' open':''}"><div class="match-grid">`;
-        c.matches.forEach(m=>{
-            if(m.solo){
-                html+=`<div class="solo-card" data-names="${m.solo.n.toLowerCase()} ${m.solo.g.toLowerCase()}">
-                    <div class="solo-icon"><i class="fas fa-user"></i></div>
-                    <div class="solo-info">
-                        <div class="fighter-name">${m.solo.n}</div>
-                        <div class="fighter-gym">${m.solo.g}</div>
-                        <div class="solo-label">Unico iscritto</div>
-                    </div>
-                </div>`;
-            } else {
-                const isBye=m.a2.n==='BYE';
-                html+=`<div class="match-card" data-names="${(m.a1.n+' '+m.a2.n+' '+m.a1.g+' '+(m.a2.g||'')).toLowerCase()}">
-                    <div class="match-head"><span>⚔ Match</span></div>
-                    <div class="fighter">
-                        <div class="fighter-color red"></div>
-                        <div class="fighter-info">
-                            <div class="fighter-name">${m.a1.n}</div>
-                            <div class="fighter-gym">${m.a1.g}</div>
-                        </div>
-                    </div>
-                    <div class="fighter${isBye?' bye':''}">
-                        <div class="vs-tag">VS</div>
-                        <div class="fighter-color blue"></div>
-                        <div class="fighter-info">
-                            <div class="fighter-name">${m.a2.n}</div>
-                            <div class="fighter-gym">${isBye?'Passa il turno':m.a2.g}</div>
-                        </div>
-                    </div>
-                </div>`;
-            }
-        });
-        html+=`</div></div></div>`;
-    });
-    container.innerHTML=html;
-}
+// ====== SVG BRACKET DRAWING ======
+const SH=22,SW=148,GAP=4,MGAP=12,CON=24,LW=1.2;
 
-function toggleCat(el){el.classList.toggle('open');el.nextElementSibling.classList.toggle('open')}
+function sg(g){return g?g.replace('ASD CS ','').replace('ASD ','').replace('SSD ',''):''}
 
-// =============================================
-// TAB SWITCHING
-// =============================================
-function switchDisc(disc){
-    currentDisc=disc;
-    const rgb={kick:'59,130,246',lotta:'168,85,247',kumite:'239,68,68'};
-    document.documentElement.style.setProperty('--current',`var(--${disc})`);
-    document.documentElement.style.setProperty('--current-glow',`var(--${disc}-glow)`);
-    document.documentElement.style.setProperty('--current-rgb',rgb[disc]);
-    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-    document.querySelector(`.tab-btn[data-disc="${disc}"]`).classList.add('active');
-    document.querySelectorAll('.disc-section').forEach(s=>s.classList.remove('active'));
-    document.getElementById(disc).classList.add('active');
-    if(!allMatchData[disc])renderDisc(disc);
-    clearSearch();
-}
-
-// =============================================
-// SEARCH
-// =============================================
-const searchInput=document.getElementById('searchInput');
-const searchClear=document.getElementById('searchClear');
-const athResults=document.getElementById('athResults');
-
-searchInput.addEventListener('input',function(){
-    const term=this.value.trim().toLowerCase();
-    searchClear.classList.toggle('show',term.length>0);
-    if(term.length<2){athResults.innerHTML='';document.querySelectorAll('.cat-block').forEach(b=>b.style.display='');return}
-    const results=[];
-    const seen=new Set();
-    rawData.forEach(a=>{
-        const cat=getCategory(a);
-        if(hiddenCategories.includes(cat))return;
-        const str=`${a.n} ${a.g} ${cat}`.toLowerCase();
-        if(str.includes(term)){
-            const key=a.n+a.d;
-            if(!seen.has(key)){seen.add(key);results.push({...a,cat})}
-        }
-    });
-    const discNames={kick:'Kick Jitsu',lotta:'Lotta a Terra',kumite:'Kumitè Kids'};
-    if(results.length>0){
-        athResults.innerHTML=results.slice(0,12).map(r=>`
-            <div class="ath-card" onclick="jumpToAthlete('${r.d}','${r.cat}','${r.n.replace(/'/g,"\\'")}')">
-                <div class="ath-ini ${r.d}-c">${r.n.charAt(0)}</div>
-                <div class="ath-body">
-                    <h4>${hl(r.n,term)}</h4>
-                    <p>${r.g} · ${r.cat}</p>
-                </div>
-                <span class="ath-tag" style="background:var(--${r.d}-glow);color:var(--${r.d})">${discNames[r.d]}</span>
-            </div>`).join('')+(results.length>12?`<div style="text-align:center;padding:8px;color:var(--text2);font-size:.7rem">+ altri ${results.length-12}</div>`:'');
-    } else {
-        athResults.innerHTML='<div class="empty-state" style="padding:16px"><i class="fas fa-search" style="font-size:1rem"></i><p style="font-size:.8rem">Nessun risultato</p></div>';
+function slot(x,y,name,gym,bye){
+    const bg=bye?'#f8f8f8':'#fff',tc=bye?'#bbb':'#000',fi=bye?'italic':'normal';
+    let s=`<rect x="${x}" y="${y}" width="${SW}" height="${SH}" fill="${bg}" stroke="#555" stroke-width="${LW}" rx="1"/>`;
+    if(!bye&&name){
+        s+=`<text x="${x+5}" y="${y+14}" font-size="7.5" fill="${tc}" font-style="${fi}" font-weight="600" font-family="Arial">${name}</text>`;
+        if(gym)s+=`<text x="${x+SW-4}" y="${y+14}" font-size="5.5" fill="#999" text-anchor="end" font-family="Arial">${sg(gym)}</text>`;
+    }else{
+        s+=`<text x="${x+5}" y="${y+14}" font-size="7" fill="#bbb" font-style="italic" font-family="Arial">BYE</text>`;
     }
-    document.querySelectorAll(`#${currentDisc} .cat-block`).forEach(b=>{b.style.display=b.textContent.toLowerCase().includes(term)?'':'none'});
-});
-
-function hl(t,q){const i=t.toLowerCase().indexOf(q);if(i===-1)return t;return t.slice(0,i)+`<span style="color:var(--gold2)">${t.slice(i,i+q.length)}</span>`+t.slice(i+q.length)}
-
-function jumpToAthlete(disc,cat,name){
-    if(currentDisc!==disc)switchDisc(disc);
-    clearSearch();
-    setTimeout(()=>{
-        document.querySelectorAll(`#${disc} .cat-block`).forEach(block=>{
-            const head=block.querySelector('.cat-head');
-            const body=block.querySelector('.cat-body');
-            if(head.querySelector('h3').textContent.includes(cat)){
-                if(!head.classList.contains('open')){head.classList.add('open');body.classList.add('open')}
-                block.querySelectorAll('.match-card, .solo-card').forEach(card=>{
-                    const names=card.getAttribute('data-names')||'';
-                    if(names.includes(name.toLowerCase())){
-                        card.classList.add('highlight-match');
-                        card.querySelectorAll('.fighter-name').forEach(fn=>{
-                            if(fn.textContent.trim().toUpperCase()===name.toUpperCase())fn.classList.add('highlight-name');
-                        });
-                        setTimeout(()=>card.scrollIntoView({behavior:'smooth',block:'center'}),100);
-                    }
-                });
-            }
-        });
-        setTimeout(()=>{
-            document.querySelectorAll('.highlight-match').forEach(c=>c.classList.remove('highlight-match'));
-            document.querySelectorAll('.highlight-name').forEach(c=>c.classList.remove('highlight-name'));
-        },4000);
-    },150);
+    return s;
 }
 
-function clearSearch(){searchInput.value='';searchClear.classList.remove('show');athResults.innerHTML='';document.querySelectorAll('.cat-block').forEach(b=>b.style.display='')}
-
-// =============================================
-// STATS
-// =============================================
-function initStats(){
-    const kc=rawData.filter(a=>a.d==='kick').length;
-    const lc=rawData.filter(a=>a.d==='lotta').length;
-    const mc=rawData.filter(a=>a.d==='kumite').length;
-    const gyms=new Set(rawData.map(a=>a.g)).size;
-    document.getElementById('statsBar').innerHTML=`
-        <div class="stat-item"><div class="stat-num">${rawData.length}</div><div class="stat-lbl">Atleti</div></div>
-        <div class="stat-item"><div class="stat-num">${gyms}</div><div class="stat-lbl">Palestre</div></div>
-        <div class="stat-item"><div class="stat-num">3</div><div class="stat-lbl">Discipline</div></div>`;
-    document.getElementById('cnt-kick').textContent=kc;
-    document.getElementById('cnt-lotta').textContent=lc;
-    document.getElementById('cnt-kumite').textContent=mc;
+function empty(x,y){
+    return`<rect x="${x}" y="${y}" width="${SW}" height="${SH}" fill="#fffce8" stroke="#c9a000" stroke-width="${LW}" rx="1" stroke-dasharray="4,2"/>`;
 }
 
-// =============================================
-// PAGE SWITCHING (Brackets / Info)
-// =============================================
-function showPage(page){
-    document.querySelectorAll('.page-content, .info-section').forEach(p=>{p.classList.remove('active-page');p.classList.remove('active')});
-    document.querySelectorAll('.top-nav a').forEach(a=>a.classList.remove('active-nav'));
-    if(page==='brackets'){
-        document.getElementById('page-brackets').classList.add('active-page');
-        document.querySelectorAll('.top-nav a')[0].classList.add('active-nav');
-    } else {
-        document.getElementById('page-info').classList.add('active');
-        document.querySelectorAll('.top-nav a')[1].classList.add('active-nav');
+function ln(x1,y1,x2,y2){return`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#555" stroke-width="${LW}"/>`}
+
+function trophy(x,y){return`<text x="${x}" y="${y}" font-size="13">🏆</text>`}
+
+// Draw connector from two midpoints to output
+function conn(x,midTop,midBot){
+    const mx=x+CON/2;const midY=(midTop+midBot)/2;
+    return ln(x,midTop,mx,midTop)+ln(x,midBot,mx,midBot)+ln(mx,midTop,mx,midBot)+ln(mx,midY,x+CON,midY);
+}
+
+function drawBracket(c){
+    const{matches:mm}=c;
+
+    // SOLO
+    if(mm.length===1&&mm[0].solo){
+        const a=mm[0].solo;const w=SW+70,h=SH+6;
+        return`<svg width="${w}" height="${h}" xmlns="http://www.w3.org/2000/svg">${slot(0,3,a.n,a.g,false)}<text x="${SW+8}" y="${16}" font-size="6.5" fill="#999" font-style="italic" font-family="Arial">unico iscritto</text></svg>`;
     }
-    window.scrollTo({top:0,behavior:'smooth'});
+
+    // 1 MATCH (2 athletes)
+    if(mm.length===1){
+        const m=mm[0];const y1=2,y2=y1+SH+GAP;const mid=(y1+SH/2+y2+SH/2)/2;
+        const w=SW+CON+SW+20,h=y2+SH+4;
+        let s=`<svg width="${w}" height="${h}" xmlns="http://www.w3.org/2000/svg">`;
+        s+=slot(0,y1,m.a1.n,m.a1.g,m.a1.n==='BYE');
+        s+=slot(0,y2,m.a2.n,m.a2.g,m.a2.n==='BYE');
+        s+=conn(SW,y1+SH/2,y2+SH/2);
+        s+=empty(SW+CON,mid-SH/2);
+        s+=trophy(SW+CON+SW+4,mid+4);
+        return s+'</svg>';
+    }
+
+    // 2 MATCHES (3-4 athletes) → semi + final
+    if(mm.length===2){
+        const mH=SH*2+GAP;const y1=2,y2=y1+mH+MGAP;
+        const mid1=y1+SH+GAP/2,mid2=y2+SH+GAP/2;
+        const w=SW+CON+SW+CON+SW+20,h=y2+mH+4;
+        let s=`<svg width="${w}" height="${h}" xmlns="http://www.w3.org/2000/svg">`;
+        // R1 match 1
+        s+=slot(0,y1,mm[0].a1.n,mm[0].a1.g,mm[0].a1.n==='BYE');
+        s+=slot(0,y1+SH+GAP,mm[0].a2.n,mm[0].a2.g,mm[0].a2.n==='BYE');
+        s+=conn(SW,y1+SH/2,y1+SH+GAP+SH/2);
+        // R1 match 2
+        s+=slot(0,y2,mm[1].a1.n,mm[1].a1.g,mm[1].a1.n==='BYE');
+        s+=slot(0,y2+SH+GAP,mm[1].a2.n,mm[1].a2.g,mm[1].a2.n==='BYE');
+        s+=conn(SW,y2+SH/2,y2+SH+GAP+SH/2);
+        // Semi slots
+        s+=empty(SW+CON,mid1-SH/2);
+        s+=empty(SW+CON,mid2-SH/2);
+        // Semi→Final connector
+        s+=conn(SW+CON+SW,mid1,mid2);
+        const finalMid=(mid1+mid2)/2;
+        s+=empty(SW+CON+SW+CON,finalMid-SH/2);
+        s+=trophy(SW+CON+SW+CON+SW+4,finalMid+4);
+        return s+'</svg>';
+    }
+
+    // 3 MATCHES (5-6 athletes)
+    if(mm.length===3){
+        const mH=SH*2+GAP;const y1=2,y2=y1+mH+MGAP,y3=y2+mH+MGAP;
+        const mid1=y1+SH+GAP/2,mid2=y2+SH+GAP/2,mid3=y3+SH+GAP/2;
+        const w=SW+CON+SW+CON+SW+CON+SW+20,h=y3+mH+4;
+        let s=`<svg width="${w}" height="${h}" xmlns="http://www.w3.org/2000/svg">`;
+        // R1
+        for(let i=0;i<3;i++){
+            const my=[y1,y2,y3][i];
+            s+=slot(0,my,mm[i].a1.n,mm[i].a1.g,mm[i].a1.n==='BYE');
+            s+=slot(0,my+SH+GAP,mm[i].a2.n,mm[i].a2.g,mm[i].a2.n==='BYE');
+            s+=conn(SW,my+SH/2,my+SH+GAP+SH/2);
+        }
+        // Semi slots
+        s+=empty(SW+CON,mid1-SH/2);s+=empty(SW+CON,mid2-SH/2);s+=empty(SW+CON,mid3-SH/2);
+        // Semi→QF top two
+        const qfMid12=(mid1+mid2)/2;
+        s+=conn(SW+CON+SW,mid1,mid2);
+        s+=empty(SW+CON+SW+CON,qfMid12-SH/2);
+        // Bottom passes through
+        s+=ln(SW+CON+SW,mid3,SW+CON+SW+CON,mid3);
+        s+=empty(SW+CON+SW+CON,mid3-SH/2);
+        // Final
+        s+=conn(SW+CON+SW+CON+SW,qfMid12,mid3);
+        const finalMid=(qfMid12+mid3)/2;
+        s+=empty(SW+CON+SW+CON+SW+CON,finalMid-SH/2);
+        s+=trophy(SW+CON+SW+CON+SW+CON+SW+4,finalMid+4);
+        return s+'</svg>';
+    }
+
+    // 4+ MATCHES — just list them with connectors
+    const mH=SH*2+GAP;const h=mm.length*(mH+8)+4;const w=SW+CON+SW+20;
+    let s=`<svg width="${w}" height="${h}" xmlns="http://www.w3.org/2000/svg">`;
+    mm.forEach((m,i)=>{
+        const my=2+i*(mH+8);
+        s+=slot(0,my,m.a1.n,m.a1.g,m.a1.n==='BYE');
+        s+=slot(0,my+SH+GAP,m.a2.n,m.a2.g,m.a2.n==='BYE');
+        s+=conn(SW,my+SH/2,my+SH+GAP+SH/2);
+        const mid=my+SH+GAP/2;
+        s+=empty(SW+CON,mid-SH/2);
+    });
+    return s+'</svg>';
 }
 
-function toggleInfo(el){el.classList.toggle('open');el.nextElementSibling.classList.toggle('open')}
+// ====== HEIGHT ESTIMATION ======
+function estH(c){
+    const n=c.matches.length;const mH=SH*2+GAP;
+    if(n===1&&c.matches[0].solo)return 44;
+    if(n===1)return mH+20;
+    if(n===2)return mH*2+MGAP+20;
+    if(n===3)return mH*3+MGAP*2+20;
+    return n*(mH+8)+20;
+}
 
-// =============================================
-// SCROLL
-// =============================================
-window.addEventListener('scroll',()=>{document.getElementById('scrollTop').classList.toggle('show',window.scrollY>400)});
+// ====== PAGINATE & RENDER ======
+const DN={kick:'KICK JITSU',lotta:'LOTTA A TERRA',kumite:'KUMITÈ KIDS'};
+let pn=0;
 
-// =============================================
-// INIT
-// =============================================
-window.onload=()=>{initStats();renderDisc('kick');renderDisc('lotta');renderDisc('kumite')};
+function render(filter){
+    const out=document.getElementById('out');out.innerHTML='';pn=0;
+    const dd=filter==='all'?['kick','lotta','kumite']:[filter];
+    dd.forEach(disc=>{
+        const cats=buildAll(disc);const maxH=880;let buf=[],bh=0;
+        cats.forEach(c=>{
+            const h=estH(c)+34;
+            if(bh+h>maxH&&buf.length>0){mkPage(out,disc,buf);buf=[];bh=0}
+            buf.push(c);bh+=h;
+        });
+        if(buf.length)mkPage(out,disc,buf);
+    });
+}
+
+function mkPage(out,disc,cats){
+    pn++;const d=document.createElement('div');d.className='a4';
+    let h=`<div class="ph"><h2>Ju Jitsu Champions Cup</h2><span class="tag tag-${disc}">${DN[disc]}</span></div>`;
+    cats.forEach(c=>{h+=`<div class="cb"><div class="cl">${c.cat} <span class="n">${c.cnt} atleti</span></div>${drawBracket(c)}</div>`});
+    h+=`<div class="pf"><span>Ju Jitsu Champions Cup — Tai Shin Do Kai Ryu</span><span>Pag. ${pn}</span></div>`;
+    d.innerHTML=h;out.appendChild(d);
+}
+
+function go(f,el){document.querySelectorAll('.btn:not(.go)').forEach(b=>b.classList.remove('on'));el.classList.add('on');render(f)}
+
+render('all');
 </script>
 </body>
 </html>
